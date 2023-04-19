@@ -1,14 +1,24 @@
 package taches;
 
-import java.time.Duration;
 import java.awt.Color;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 public class Tache {
     private String nomDeTache;
     private Duration durée;
+    private LocalDateTime deadline;
     private Priorité priorité;
-    private Catégorie cat;
+    private Categorie cat;
     private Color couleur;
+    public Tache(String name, Duration duration, Priorité priority, LocalDateTime deadline, Categorie cat){
+        this.nomDeTache = name;
+        this.durée = duration;
+        this.priorité = priority;
+        this.deadline = deadline;
+        this.cat = cat;
+        this.couleur = CategoryColorMap.getColorForCategorie(cat);
+    }
     public void setNomDeTache(String nomDeTache) {
         this.nomDeTache = nomDeTache;
     }
@@ -27,40 +37,14 @@ public class Tache {
     public Priorité getPriorité() {
         return priorité;
     }
-    public void setCat(Catégorie cat) {
+    public void setCat(Categorie cat) {
         this.cat = cat;
+        this.couleur = CategoryColorMap.getColorForCategorie(cat);
     }
-    public Catégorie getCat() {
+    public Categorie getCat() {
         return cat;
     }
-    public void setCouleur(Color couleur) {
-        this.couleur = couleur;
-    }
-    public Color getCouleur() {
-        return couleur;
-    }
-    public void setColor(){
-        Color color;
-        switch (this.getCat()) {
-            case Studies :
-                color = Color.PINK;
-                break;
-            case Work :
-                color = Color.GREEN;
-                break;
-            case Hobby :
-                color = Color.BLUE;
-                break;
-            case Sport:
-                color = Color.YELLOW;
-                break;
-            case Health:
-                color = Color.ORANGE;
-                break;
-            default:
-                color = Color.WHITE;
-                break;
-        }
-        setCouleur(color);
+    public LocalDateTime getDeadline() {
+        return deadline;
     }
 }

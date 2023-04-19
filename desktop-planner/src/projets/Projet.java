@@ -1,11 +1,19 @@
 package projets;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import taches.Tache;
 
 public class Projet {
     private String nomDuProjet;
     private String description;
-    private Tache[] taches; // l'ensemble des taches de ce projet
+    private Set<Tache> tasks;
+    public Projet(String name, String description) {
+        this.nomDuProjet = name;
+        this.description = description;
+        this.tasks = new HashSet<>();
+    }
     public void setNomDuProjet(String nomDuProjet) {
         this.nomDuProjet = nomDuProjet;
     }
@@ -17,11 +25,5 @@ public class Projet {
     }
     public String getDescription() {
         return description;
-    }
-    public void setTaches(Tache[] taches) {
-        this.taches = taches;
-    }
-    public Tache[] getTaches() {
-        return taches;
     }
 }
