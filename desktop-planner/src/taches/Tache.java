@@ -3,6 +3,7 @@ package taches;
 import java.awt.Color;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public class Tache {
     private String nomDeTache;
@@ -11,13 +12,23 @@ public class Tache {
     private Priorité priorité;
     private Categorie cat;
     private Color couleur;
-    public Tache(String name, Duration duration, Priorité priority, LocalDateTime deadline, Categorie cat){
+    private LocalTime startTime;
+    private LocalTime endTime;
+    public Tache(String name, Duration duration, Priorité priority, LocalDateTime deadline, Categorie cat, LocalTime s, LocalTime e){
         this.nomDeTache = name;
         this.durée = duration;
         this.priorité = priority;
         this.deadline = deadline;
         this.cat = cat;
         this.couleur = CategoryColorMap.getColorForCategorie(cat);
+        this.startTime = s;
+        this.endTime = e;
+    }
+    public LocalTime getStartTime() {
+        return startTime;
+    }
+    public LocalTime getEndTime() {
+        return endTime;
     }
     public void setNomDeTache(String nomDeTache) {
         this.nomDeTache = nomDeTache;
