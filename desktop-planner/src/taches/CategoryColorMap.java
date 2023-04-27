@@ -9,8 +9,8 @@ public class CategoryColorMap {
 
     static {
         CategorieColorMap.put(Categorie.STUDIES, Color.BLUE);
-        CategorieColorMap.put(Categorie.WORK, Color.GREEN);
-        CategorieColorMap.put(Categorie.HEALTH, Color.ORANGE);
+        CategorieColorMap.put(Categorie.WORK, Color.ORANGE);
+        CategorieColorMap.put(Categorie.HEALTH, Color.GREEN);
         CategorieColorMap.put(Categorie.SPORT, Color.RED);
         CategorieColorMap.put(Categorie.HOBBY, Color.PINK);
         CategorieColorMap.put(Categorie.OTHER, Color.GRAY);

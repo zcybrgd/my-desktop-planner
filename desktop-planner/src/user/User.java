@@ -18,4 +18,5 @@ public class User {
     public void setPass(PasswordField pass) {
         this.pass = pass;
     }
+    // valider ou refuser la proposition de planification, il peut changer le nom des sous taches
 }

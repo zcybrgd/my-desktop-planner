@@ -19,7 +19,7 @@ public class CalendrierPersonnel {
         this.taches = new ArrayList<>();
     }
 
-    public void addTache(Tache Tache, boolean manuallyScheduled) throws MinimumDurationException {
+   /*  public void addTache(Tache Tache, boolean manuallyScheduled) throws MinimumDurationException {
         if (manuallyScheduled) {
             // manually schedule the Tache
             LocalTime start = Tache.getStartTime();
@@ -67,7 +67,7 @@ public class CalendrierPersonnel {
             // for the purpose of this example, we simply add the Tache to the list of scheduled Taches
             Taches.add(Tache);
         }
-    }
+    }*/
 
     public List<Creneau> getlesCrenaux() {
         return lesCrenaux;

@@ -5,7 +5,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-public class Tache {
+public abstract class Tache {
     private String nomDeTache;
     private Duration durée;
     private LocalDateTime deadline;
@@ -58,4 +58,5 @@ public class Tache {
     public LocalDateTime getDeadline() {
         return deadline;
     }
+    // replanifier()
 }
