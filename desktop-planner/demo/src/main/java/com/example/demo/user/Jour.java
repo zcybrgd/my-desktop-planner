@@ -11,14 +11,17 @@ import javafx.util.Pair;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
-public class Jour implements Serializable {
+public class Jour implements Serializable, Comparable<Jour> {
     private LocalDate dateDuJour;
-    private List<Tache> listesDesTaches;
-    private List<Creneau> creneaux;
+    @Override
+    public int compareTo(Jour other) {
+        return this.dateDuJour.compareTo(other.dateDuJour);
+    }
+    private Set<Tache> listesDesTaches= new TreeSet<>();
+    private List<Creneau> creneaux = new ArrayList<>();
 
     public Jour(LocalDate date) {
         this.dateDuJour = date;

@@ -5,7 +5,9 @@ import com.example.demo.Exceptions.DateAnterieure;
 import com.example.demo.HelloApplication;
 import com.example.demo.enumerations.Prio;
 import com.example.demo.planification.Categorie;
+import com.example.demo.planification.Creneau;
 import com.example.demo.planification.Tache;
+import com.example.demo.planification.TacheSimple;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -100,7 +102,7 @@ public class User implements Serializable {
         setPlanning(nouveauPlanning);
     }
 
-    public void introduireUneTache(Tache tache, String type) {
+    public void introduireUneTache(Tache tache, String type, Pair<Creneau, Integer> creneauChoisi, Jour journeeChoisie) {
         // Create the fields for entering task data
         TextField nomTacheTextField = new TextField();
         ComboBox<Prio> prioriteComboBox = new ComboBox<>();
@@ -166,14 +168,27 @@ public class User implements Serializable {
         alert.showAndWait().ifPresent(result -> {
             if (result == ButtonType.OK) {
                 // Retrieve the entered values
+                creneauChoisi.getKey().decomposer(creneauChoisi, journeeChoisie.getCreneaux());
                 String nomTache = nomTacheTextField.getText();
                 Prio priorite = prioriteComboBox.getValue();
                 LocalDate deadline = deadlineDatePicker.getValue();
                 String categorie = categorieComboBox.getValue();
-                System.out.println("nom Tache: " + nomTache);
-                System.out.println("Prio: " + priorite.toString());
-                System.out.println("ddl: " + deadline);
-                System.out.println("cat: " + categorie);
+                Categorie selectedCategorie = new Categorie(categorie);
+                if (tache instanceof TacheSimple) {
+                    TacheSimple tacheSimple = (TacheSimple) tache;
+                    tacheSimple.setNom(nomTache);
+                    tacheSimple.setPriorite(priorite);
+                    tacheSimple.setDeadline(deadline);
+                    tacheSimple.setCategorie(selectedCategorie);
+                    tacheSimple.planifierTache(this);
+                    System.out.println("nom Tache: " + tacheSimple.getNom());
+                    System.out.println("Prio: " + tacheSimple.getPriorite().toString());
+                    System.out.println("ddl: " + tacheSimple.getDeadline().toString());
+                    System.out.println("journee " + tacheSimple.getJournees().toString());
+                    System.out.println("creneau " + tacheSimple.getCreneauDeTache().getHeureFin());
+                    System.out.println("categ " + tacheSimple.getCategorie().getNom());
+                    System.out.println("categ color" + tacheSimple.getCategorie().getCouleur().toString());
+                }
             }
         });
     }

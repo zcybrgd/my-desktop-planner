@@ -1,6 +1,7 @@
 package com.example.demo.planification;
 
 import com.example.demo.enumerations.Prio;
+import com.example.demo.user.User;
 
 
 import java.io.Serializable;
@@ -18,7 +19,7 @@ public class TacheDecomposable extends Tache implements Decomposable, Serializab
     private List<Tache> sousTaches;
     // Ses sous-tâches auront le même nom que la tâche décomposée auquel sera concaténée le numéro de la sous tâche.
     void changerNom(){}
-    void planifierTache(){
+    void planifierTache(User user){
    // Une tâche décomposable peut être planifiée en plusieurs créneaux jusqu'à atteindre la durée prévue.
     }
     void replanifierTache(){

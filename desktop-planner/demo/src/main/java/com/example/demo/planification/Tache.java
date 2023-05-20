@@ -4,10 +4,14 @@ package com.example.demo.planification;
 
 import com.example.demo.enumerations.EtatTache;
 import com.example.demo.enumerations.Prio;
+import com.example.demo.user.Jour;
+import com.example.demo.user.User;
 
 import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.Set;
+import java.util.TreeSet;
 
 public abstract class Tache implements Serializable {
     private String nom;
@@ -17,7 +21,43 @@ public abstract class Tache implements Serializable {
     private Categorie categorie;
     private EtatTache stateDeTache=EtatTache.notRealized;
 
-    abstract void planifierTache();
+
+  // peuvent etre pour la périodicité pour les taches simples et les jours des taches composées
+    protected Set<Jour> journees = new TreeSet<>();
+
+    public Set<Jour> getJournees() {
+        return journees;
+    }
+
+    public String getNom() {
+        return nom;
+    }
+
+    public Duration getDuree() {
+        return duree;
+    }
+
+    public Categorie getCategorie() {
+        return categorie;
+    }
+
+    public LocalDate getDeadline() {
+        return deadline;
+    }
+
+    public EtatTache getStateDeTache() {
+        return stateDeTache;
+    }
+
+    public Prio getPriorite() {
+        return priorite;
+    }
+
+    public void setJournees(Set<Jour> journees) {
+        this.journees = journees;
+    }
+
+    abstract void planifierTache(User user);
     // dans le cas ou la tache est inProgress ou notRealized
     // le système lui demande la durée supplémentaire nécessaire pour l'accomplir,
     // et le nouveau deadline si jamais elle en possède un.

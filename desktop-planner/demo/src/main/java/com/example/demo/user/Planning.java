@@ -21,7 +21,7 @@ import java.util.*;
 
 public class Planning implements Serializable {
     private List<Jour> jours = new ArrayList<Jour>();
-    private Set<Tache> tachesaPlanifier;
+    private Set<Tache> tachesaPlanifier = new TreeSet<>();
     private LocalDate dateDebut;
     private LocalDate dateFin;
     private Pair<LocalDate, LocalDate> periode;
@@ -253,16 +253,19 @@ public class Planning implements Serializable {
                         LocalDate dateDejourneeChoisie = user.getPlanning().choisirDateDansPeriode();
                         Jour journeeChoisie = user.getPlanning().chercherJourDansPeriode(dateDejourneeChoisie);
                         Pair<Creneau, Integer> creneauChoisi = journeeChoisie.choisirCreneauDansUneJournee(user, journeeChoisie);
-                        try{
-                            creneauChoisi.getKey().decomposer(creneauChoisi, journeeChoisie.getCreneaux());
-                            Duration dureeDeTache = creneauChoisi.getKey().calculerDuree();
-                            System.out.println("on va planifier une tache simple");
-                            TacheSimple tacheaIntroduire = new TacheSimple(dureeDeTache, creneauChoisi.getKey());
-                            user.introduireUneTache(tacheaIntroduire, "Simple" );
-                            // tacheaIntroduire.planifierTache(user);
-                        }catch(NullPointerException ex){
-                            System.out.println("pas de créneau à décomposer");
+                        try {
+                            if (creneauChoisi != null && creneauChoisi.getKey() != null) {
+                                Duration dureeDeTache = creneauChoisi.getKey().calculerDuree();
+                                System.out.println("On va planifier une tache simple");
+                                TacheSimple tacheaIntroduire = new TacheSimple(dureeDeTache, creneauChoisi.getKey(), journeeChoisie);
+                                user.introduireUneTache(tacheaIntroduire, "Simple", creneauChoisi, journeeChoisie);
+                            } else {
+                                System.out.println("Pas de créneau à décomposer");
+                            }
+                        } catch (NullPointerException ex) {
+                            System.out.println("Une erreur s'est produite : " + ex.getMessage());
                         }
+
                     }catch(PasDePlanning ex){
                         Alert alert = new Alert(Alert.AlertType.ERROR);
                         alert.setTitle("Erreur");

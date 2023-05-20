@@ -31,14 +31,11 @@ public class Calendrier implements Serializable {
 
     @FXML
     void planification(ActionEvent event) {
-            System.out.println("j'ai clické sur le bouton");
-           // Creneau.planifierManuellementAuto(user);
            Planning.planifier(user);
     }
 
     @FXML
     void fixer(ActionEvent event) {
-        System.out.println("je vais fixer alala et mon user : " + user.getPseudo());
         Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Scene previousScene = calendarInit(currentStage);
         currentStage.setScene(previousScene);

@@ -100,6 +100,9 @@ public class SideBar implements Serializable {
         calendarItem.setOnAction(calendrier->{
              showPage("calendrier.fxml");
         });
+        paramItem.setOnAction(calendrier->{
+            showPage("param.fxml");
+        });
         logoutButton.setOnAction(logout->{
             Stage currentStage = (Stage) logoutButton.getScene().getWindow();
             // Close the current window
@@ -122,6 +125,7 @@ public class SideBar implements Serializable {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlFile));
             Parent page = fxmlLoader.load();
+            mainPage.getChildren().remove(0);
             mainPage.getChildren().add(0,page); // Add the new page
             if(fxmlFile.equals("calendrier.fxml")){
                 Calendrier controller = fxmlLoader.getController();
