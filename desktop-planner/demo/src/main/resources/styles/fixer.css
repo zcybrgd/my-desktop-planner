@@ -1,0 +1,30 @@
+.label {
+    -fx-font-size: 14pt;
+    -fx-text-fill: #333333;
+}
+
+.date-picker {
+    -fx-font-size: 14pt;
+}
+
+.button {
+    -fx-background-color: #333333;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 14pt;
+}
+
+.button:hover {
+    -fx-background-color: #666666;
+}
+
+.grid-pane {
+    -fx-padding: 10;
+    -fx-hgap: 10;
+    -fx-vgap: 10;
+}
+
+.v-box {
+    -fx-padding: 10;
+}
+
+

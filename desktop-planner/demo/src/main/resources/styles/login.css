@@ -1,0 +1,49 @@
+.login-grid {
+    -fx-alignment: center;
+    -fx-hgap: 10;
+    -fx-vgap: 10;
+    -fx-padding: 25;
+    -fx-background-color: white;
+}
+
+.login-field {
+    -fx-font-size: 14px;
+    -fx-prompt-text-fill: white;
+    -fx-border-radius: 25px;
+    -fx-padding: 10px;
+    -fx-background-color: white;
+    -fx-border-color: #FFC0CB;
+}
+
+.login-field:focused {
+    -fx-background-color: white;
+}
+
+.login-button {
+    -fx-background-color: #FFC0CB;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 10px 20px;
+}
+
+.create-account-button {
+    -fx-background-color: white;
+    -fx-border-color: #FFC0CB;
+    -fx-text-fill: #FFC0CB;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 10px 20px;
+}
+
+.create-account-button:hover {
+    -fx-background-color: #FFC0CB;
+    -fx-text-fill: white;
+}
+
+.status-label {
+    -fx-font-size: 15px;
+    -fx-text-fill: #FFC0CB;
+    -fx-font-weight: bold;
+    -fx-padding: 5px;
+}
