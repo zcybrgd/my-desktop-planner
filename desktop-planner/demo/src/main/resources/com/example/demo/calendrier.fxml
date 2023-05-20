@@ -7,5 +7,6 @@
    <children>
       <Button layoutX="730.0" layoutY="106.0" mnemonicParsing="false" onAction="#planification" text="Planifier" />
       <Button layoutX="636.0" layoutY="52.0" mnemonicParsing="false" onAction="#fixer" text="Fixer une nouvelle période pour le planning" />
+      <Button layoutX="697.0" layoutY="180.0" mnemonicParsing="false" onAction="#affichage" text="Affichage des taches" />
    </children>
 </AnchorPane>

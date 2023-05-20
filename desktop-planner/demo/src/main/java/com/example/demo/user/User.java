@@ -4,10 +4,7 @@ package com.example.demo.user;
 import com.example.demo.Exceptions.DateAnterieure;
 import com.example.demo.HelloApplication;
 import com.example.demo.enumerations.Prio;
-import com.example.demo.planification.Categorie;
-import com.example.demo.planification.Creneau;
-import com.example.demo.planification.Tache;
-import com.example.demo.planification.TacheSimple;
+import com.example.demo.planification.*;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -104,6 +101,8 @@ public class User implements Serializable {
 
     public void introduireUneTache(Tache tache, String type, Pair<Creneau, Integer> creneauChoisi, Jour journeeChoisie) {
         // Create the fields for entering task data
+        final int[] periodicite = {0};
+        final int[] nbrdeDecompo = {0};
         TextField nomTacheTextField = new TextField();
         ComboBox<Prio> prioriteComboBox = new ComboBox<>();
         prioriteComboBox.setItems(FXCollections.observableArrayList(Prio.values()));
@@ -128,9 +127,45 @@ public class User implements Serializable {
                         }
                         return null;
                     }));
+
+            // Listener to retrieve the periodicité value
+            periodiciteTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+                if (!newValue.isEmpty()) {
+                    periodicite[0] = Integer.parseInt(newValue);
+                    // Do something with the periodicité value
+                    System.out.println("Périodicité: " + periodicite[0]);
+                }
+            });
             tacheSimpleVBox.getChildren().addAll(new Label("Périodicité :"), periodiciteTextField);
         }
 
+        if (type.equals("Decomposable")) {
+            TextField periodiciteTextField = new TextField();
+            periodiciteTextField.setTextFormatter(new TextFormatter<>(new IntegerStringConverter(), 0,
+                    change -> {
+                        String newText = change.getControlNewText();
+                        if (newText.matches("\\d*")) {
+                            try {
+                                int intValue = Integer.parseInt(newText);
+                                if (intValue > 0) {
+                                    return change;
+                                }
+                            } catch (NumberFormatException ignored) {
+                            }
+                        }
+                        return null;
+                    }));
+
+            // Listener to retrieve the periodicité value
+            periodiciteTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+                if (!newValue.isEmpty()) {
+                    nbrdeDecompo[0] = Integer.parseInt(newValue);
+                    // Do something with the periodicité value
+                    System.out.println("nbr de décompo:  " + nbrdeDecompo[0]);
+                }
+            });
+            tacheSimpleVBox.getChildren().addAll(new Label("Décomposer sur combien? :"), periodiciteTextField);
+        }
         // Create the dialog box for entering the task
         GridPane gridPane = new GridPane();
         gridPane.setHgap(10);
@@ -168,26 +203,34 @@ public class User implements Serializable {
         alert.showAndWait().ifPresent(result -> {
             if (result == ButtonType.OK) {
                 // Retrieve the entered values
-                creneauChoisi.getKey().decomposer(creneauChoisi, journeeChoisie.getCreneaux());
                 String nomTache = nomTacheTextField.getText();
                 Prio priorite = prioriteComboBox.getValue();
                 LocalDate deadline = deadlineDatePicker.getValue();
                 String categorie = categorieComboBox.getValue();
-                Categorie selectedCategorie = new Categorie(categorie);
+                Categorie selectedCategorie;
+                if(categorie==null){
+                    selectedCategorie = new Categorie("Other");
+                }else{
+                    selectedCategorie = new Categorie(categorie);
+                }
                 if (tache instanceof TacheSimple) {
+                    creneauChoisi.getKey().decomposer(creneauChoisi, journeeChoisie.getCreneaux());
                     TacheSimple tacheSimple = (TacheSimple) tache;
                     tacheSimple.setNom(nomTache);
                     tacheSimple.setPriorite(priorite);
                     tacheSimple.setDeadline(deadline);
                     tacheSimple.setCategorie(selectedCategorie);
+                    tacheSimple.setNbrJourDePeriodicite(periodicite[0]);
                     tacheSimple.planifierTache(this);
-                    System.out.println("nom Tache: " + tacheSimple.getNom());
-                    System.out.println("Prio: " + tacheSimple.getPriorite().toString());
-                    System.out.println("ddl: " + tacheSimple.getDeadline().toString());
-                    System.out.println("journee " + tacheSimple.getJournees().toString());
-                    System.out.println("creneau " + tacheSimple.getCreneauDeTache().getHeureFin());
-                    System.out.println("categ " + tacheSimple.getCategorie().getNom());
-                    System.out.println("categ color" + tacheSimple.getCategorie().getCouleur().toString());
+                }
+                if (tache instanceof TacheDecomposable) {
+                    TacheDecomposable tacheDecomposable = (TacheDecomposable) tache;
+                    tacheDecomposable.setNom(nomTache);
+                    tacheDecomposable.setDeadline(deadline);
+                    tacheDecomposable.setPriorite(priorite);
+                    tacheDecomposable.setCategorie(selectedCategorie);
+                    tacheDecomposable.decomposer(nbrdeDecompo[0],this);
+                    tacheDecomposable.planifierTache(this);
                 }
             }
         });

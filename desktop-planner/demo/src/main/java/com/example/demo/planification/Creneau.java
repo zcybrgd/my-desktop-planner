@@ -1,25 +1,16 @@
 package com.example.demo.planification;
 
-import com.example.demo.Exceptions.PasDePlanning;
-import com.example.demo.user.Jour;
-import com.example.demo.user.User;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceDialog;
-import javafx.scene.layout.HBox;
-import javafx.stage.Stage;
+
 import javafx.util.Pair;
 
 import java.io.Serializable;
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class Creneau implements Decomposable, Serializable {
+public class Creneau implements Decomposable, Serializable, Comparable<Creneau> {
     private LocalTime HeureDebut;
     private LocalTime HeureFin;
     private boolean estLibre=true;
@@ -27,6 +18,11 @@ public class Creneau implements Decomposable, Serializable {
     public Creneau(LocalTime HeureDebut, LocalTime HeureFin){
         this.HeureDebut = HeureDebut;
         this.HeureFin = HeureFin;
+    }
+
+    @Override
+    public int compareTo(Creneau other) {
+        return this.getHeureDebut().compareTo(other.getHeureDebut());
     }
 
     public boolean isEstLibre() {

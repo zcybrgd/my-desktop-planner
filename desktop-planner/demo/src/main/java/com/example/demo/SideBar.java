@@ -125,7 +125,9 @@ public class SideBar implements Serializable {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlFile));
             Parent page = fxmlLoader.load();
-            mainPage.getChildren().remove(0);
+            if(mainPage.getChildren().size()==3){
+                mainPage.getChildren().remove(0);
+            }
             mainPage.getChildren().add(0,page); // Add the new page
             if(fxmlFile.equals("calendrier.fxml")){
                 Calendrier controller = fxmlLoader.getController();

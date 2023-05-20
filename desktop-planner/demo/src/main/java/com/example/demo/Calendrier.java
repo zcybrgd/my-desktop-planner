@@ -1,6 +1,8 @@
 package com.example.demo;
 
 import com.example.demo.planification.Creneau;
+import com.example.demo.planification.Tache;
+import com.example.demo.planification.TacheSimple;
 import com.example.demo.user.Planning;
 import com.example.demo.user.User;
 import javafx.application.Platform;
@@ -34,6 +36,17 @@ public class Calendrier implements Serializable {
            Planning.planifier(user);
     }
 
+    @FXML
+    void affichage(ActionEvent event) {
+         if(user.getPlanning()!=null){
+             for(Tache t : user.getPlanning().getTachesaPlanifier()){
+                 System.out.println("tache: " + t.getNom());
+                 System.out.println("cat: " + t.getCategorie());
+             }
+         }else{
+             System.out.println("ya pas de planning");
+         }
+    }
     @FXML
     void fixer(ActionEvent event) {
         Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();

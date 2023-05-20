@@ -3,6 +3,7 @@ package com.example.demo.user;
 import com.example.demo.Exceptions.PasDePlanning;
 import com.example.demo.planification.Creneau;
 import com.example.demo.planification.Tache;
+import com.example.demo.planification.TacheDecomposable;
 import com.example.demo.planification.TacheSimple;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -27,6 +28,13 @@ public class Planning implements Serializable {
     private Pair<LocalDate, LocalDate> periode;
 
 
+    public Set<Tache> getTachesaPlanifier() {
+        return tachesaPlanifier;
+    }
+
+    public void setTachesaPlanifier(Set<Tache> tachesaPlanifier) {
+        this.tachesaPlanifier = tachesaPlanifier;
+    }
 
     public void setPeriode(LocalDate dateDebut, LocalDate dateFin) {
         this.periode = new Pair<LocalDate, LocalDate>(dateDebut, dateFin);
@@ -243,13 +251,13 @@ public class Planning implements Serializable {
                 stage.setTitle("Le type de la tache que vous allez planifier");
                 Button simpleBtn = new Button("Simple");
                 Button decomposableBtn = new Button("Decomposable");
-
                 simpleBtn.setOnAction(e -> {
                     try{
                         if(user.getPlanning()!=null){
                             System.out.println("user : " + user.getPseudo()+ "planning: " + user.getPlanning().getPeriode());
                         }
                         if(user.getPlanning()==null) throw new PasDePlanning("Vous n'avez initialiser aucun Planning");
+                        e.consume();
                         LocalDate dateDejourneeChoisie = user.getPlanning().choisirDateDansPeriode();
                         Jour journeeChoisie = user.getPlanning().chercherJourDansPeriode(dateDejourneeChoisie);
                         Pair<Creneau, Integer> creneauChoisi = journeeChoisie.choisirCreneauDansUneJournee(user, journeeChoisie);
@@ -277,6 +285,44 @@ public class Planning implements Serializable {
 
                 decomposableBtn.setOnAction(e -> {
                     // code to handle the decomposable task goes here
+                    try{
+                        if(user.getPlanning()!=null){
+                            System.out.println("user : " + user.getPseudo()+ "planning: " + user.getPlanning().getPeriode());
+                        }
+                        if(user.getPlanning()==null) throw new PasDePlanning("Vous n'avez initialiser aucun Planning");
+                        // Create a dialog box for entering the duration
+                        TextInputDialog dialogD = new TextInputDialog();
+                        dialogD.setTitle("Entrer la Durée ");
+                        dialogD.setHeaderText(null);
+                        dialogD.setContentText("Entrer la durée provisoire pour cette tache décomposée:");
+
+                        // Show the dialog and wait for the user's input
+                        Optional<String> resultD = dialogD.showAndWait();
+
+                        // Process the user's input
+                        resultD.ifPresent(durationString -> {
+                            try {
+                                Duration duration = Duration.ofMinutes(Long.parseLong(durationString));
+                                TacheDecomposable tacheaIntroduire = new TacheDecomposable(duration);
+                                System.out.println("duration : " + duration);
+                                user.introduireUneTache(tacheaIntroduire, "Decomposable", null, null);
+                            } catch (NumberFormatException ex) {
+                                // Handle invalid input format
+                                Alert alert = new Alert(Alert.AlertType.ERROR);
+                                alert.setTitle("Erreur");
+                                alert.setHeaderText("Durée invalide");
+                                alert.setContentText("La durée doit être un nombre entier de minutes");
+                                alert.showAndWait();
+                            }
+                        });
+
+                    }catch(PasDePlanning ex){
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Erreur");
+                        alert.setHeaderText("Y a aucun Planning courant dans votre Application!, veuillez initialiser un planning");
+                        alert.setContentText("Veuillez choisissez une période pour votre planning");
+                        alert.showAndWait();
+                    }
                 });
 
                 stage.setOnCloseRequest(e -> {

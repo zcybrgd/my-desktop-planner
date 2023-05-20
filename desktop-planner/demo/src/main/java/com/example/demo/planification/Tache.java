@@ -21,7 +21,6 @@ public abstract class Tache implements Serializable {
     private Categorie categorie;
     private EtatTache stateDeTache=EtatTache.notRealized;
 
-
   // peuvent etre pour la périodicité pour les taches simples et les jours des taches composées
     protected Set<Jour> journees = new TreeSet<>();
 

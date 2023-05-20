@@ -9,8 +9,24 @@ import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalDate;
 
-public class TacheSimple extends Tache implements Serializable {
-    private boolean periodicite;
+public class TacheSimple extends Tache implements Serializable, Comparable<TacheSimple> {
+
+    @Override
+    public int compareTo(TacheSimple other) {
+        Jour thisJour = this.getJournees().iterator().next();
+        Jour otherJour = other.getJournees().iterator().next();
+
+        int jourComparison = thisJour.compareTo(otherJour);
+        if (jourComparison != 0) {
+            return jourComparison;
+        } else {
+            return this.getCreneauDeTache().compareTo(other.getCreneauDeTache());
+        }
+    }
+    public void setNbrJourDePeriodicite(int nbrJourDePeriodicite) {
+        this.nbrJourDePeriodicite = nbrJourDePeriodicite;
+    }
+
     // ces tachesSimples peuvent être périodiques (planifiées tous les n jours).
     //si n = 0 , la tâche n'est planifiée qu'une fois.
     private int nbrJourDePeriodicite;
@@ -33,7 +49,7 @@ public class TacheSimple extends Tache implements Serializable {
     }
     // dans un seul créneau
     public void planifierTache(User user){
-
+        user.getPlanning().getTachesaPlanifier().add(this);
     }
     void replanifierTache(){
 
@@ -46,7 +62,4 @@ public class TacheSimple extends Tache implements Serializable {
         this.creneauDeTache = creneauDeTache;
     }
 
-    public void setPeriodicite(boolean periodicite) {
-        this.periodicite = periodicite;
-    }
 }
