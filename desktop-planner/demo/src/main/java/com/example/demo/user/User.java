@@ -67,7 +67,7 @@ public class User implements Serializable {
                 return new Pair<Boolean, User> (true, user); // un utilisateur existe avec ce username et ce mot de passe
             }
         }
-        return new Pair<Boolean, User> (true, null); // y a aucun utilisateur qui existe
+        return new Pair<Boolean, User> (false, null); // y a aucun utilisateur qui existe
     }
 
 

@@ -32,7 +32,8 @@ public class Calendrier implements Serializable {
     @FXML
     void planification(ActionEvent event) {
             System.out.println("j'ai clické sur le bouton");
-            Creneau.planifierTache(user);
+           // Creneau.planifierManuellementAuto(user);
+           Planning.planifier(user);
     }
 
     @FXML
