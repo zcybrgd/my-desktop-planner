@@ -81,7 +81,7 @@
                         <Font size="18.0" />
                      </font>
                   </Button>
-                  <Button fx:id="logoutButton" alignment="CENTER_RIGHT" layoutX="30.0" layoutY="545.0" mnemonicParsing="false" onAction="#deconnecter" style="-fx-background-color: transparent;" text="Déconnecter">
+                  <Button fx:id="logoutButton" alignment="CENTER_RIGHT" layoutX="30.0" layoutY="545.0" mnemonicParsing="false" style="-fx-background-color: transparent;" text="Déconnecter">
                      <font>
                         <Font size="18.0" />
                      </font>
@@ -93,7 +93,6 @@
                   </Label>
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="currentPage" prefHeight="600.0" prefWidth="900.0" />
          </children>
       </AnchorPane>
    </children>

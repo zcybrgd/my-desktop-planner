@@ -4,15 +4,13 @@ package com.example.demo.interfacesGraphiques;
 import com.example.demo.HelloApplication;
 import com.example.demo.SideBar;
 import com.example.demo.user.User;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
@@ -22,6 +20,7 @@ import javafx.util.Pair;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Optional;
 
 public class loginpage implements Serializable {
     private User currentUser;
@@ -106,13 +105,33 @@ public class loginpage implements Serializable {
                     try {
                         Parent root = fxmlLoader.load();
                         SideBar controller = fxmlLoader.getController();
+                        controller.setUtilisateur(currentUser);
                         controller.setUserNameLabel(currentUser.getPseudo());
-
                         // Create a new scene with the loaded FXML root
                         Scene scene = new Scene(root);
-
                         // Set the scene for the current stage
                         currentStage.setScene(scene);
+                        currentStage.setOnCloseRequest(event2 -> {
+                            if (controller.getUtilisateur().getPlanning() != null) {
+                                System.out.println("on a get ce planning: c le notre " + controller.getUtilisateur().getPlanning().getPeriode());
+                            }
+                            // Show confirmation alert
+                            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                            alert.setTitle("Sauvegarder votre activité dans l'application");
+                            alert.setHeaderText("Voulez-vous sauvegarder avant de quitter l'application?");
+                            alert.setContentText("Cliquez sur OK pour enregistrer ou sur Annuler pour annuler vos modifications.");
+
+                            ButtonType saveButton = new ButtonType("OK");
+                            ButtonType cancelButton = new ButtonType("Annuler", ButtonBar.ButtonData.CANCEL_CLOSE);
+                            alert.getButtonTypes().setAll(saveButton, cancelButton);
+                            Optional<ButtonType> result = alert.showAndWait();
+                            if (result.get() == saveButton) {
+                                User.saveUpdateUsertoFile(controller.getUtilisateur());
+                            } else {
+                                // User clicked Cancel button, close application
+                                Platform.exit();
+                            }
+                        });
                         currentStage.show();
                     } catch (IOException e) {
                         e.printStackTrace();

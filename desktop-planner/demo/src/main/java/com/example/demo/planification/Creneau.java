@@ -160,7 +160,7 @@ public class Creneau implements Decomposable, Serializable {
                         Jour journeeChoisie = user.getPlanning().chercherJourDansPeriode(dateDejourneeChoisie);
                         Pair<Creneau, Integer> creneauChoisi = journeeChoisie.choisirCreneauDansUneJournee(user, journeeChoisie);
                         try{
-                            creneauChoisi.getKey().decomposer(creneauChoisi, journeeChoisie.getCreneaux());
+                           // creneauChoisi.getKey().decomposer(creneauChoisi, journeeChoisie.getCreneaux());
                             Duration dureeDeTache = creneauChoisi.getKey().calculerDuree();
                             System.out.println("on va planifier une tache simple");
                             TacheSimple tacheaIntroduire = new TacheSimple(dureeDeTache, creneauChoisi.getKey());

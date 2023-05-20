@@ -207,12 +207,6 @@ public class User implements Serializable {
             users.set(ourUser.getValue(), userUp);
             User.saveUsersToFile(users, HelloApplication.getFileNameUsers());
         }
-        ArrayList<User> usersApresSaving = User.loadUsersFromFile(HelloApplication.getFileNameUsers());
-        System.out.println("saving; ");
-        for(User u1 : usersApresSaving){
-            System.out.println("user : " + u1.getPseudo() + " mdp : " + u1.getMdp());
-            System.out.println("periode : " + u1.getPlanning().getPeriode());
-        }
     }
     public static Pair<User, Integer> findUserByPseudoname(ArrayList<User> users, String targetPseudoname) {
         int cpt=-1;

@@ -1,7 +1,9 @@
 package com.example.demo.user;
 
+import com.example.demo.Exceptions.PasDePlanning;
 import com.example.demo.planification.Creneau;
 import com.example.demo.planification.Tache;
+import com.example.demo.planification.TacheSimple;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -12,6 +14,7 @@ import javafx.util.Pair;
 
 
 import java.io.Serializable;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
@@ -219,7 +222,6 @@ public class Planning implements Serializable {
             return Collections.emptyList();
         }
     }
-
 
 }
 
