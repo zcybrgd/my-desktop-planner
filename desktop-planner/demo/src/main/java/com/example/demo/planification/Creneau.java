@@ -20,6 +20,7 @@ public class Creneau implements Decomposable, Serializable, Comparable<Creneau> 
         this.HeureFin = HeureFin;
     }
 
+    public Creneau(){}
     @Override
     public int compareTo(Creneau other) {
         return this.getHeureDebut().compareTo(other.getHeureDebut());

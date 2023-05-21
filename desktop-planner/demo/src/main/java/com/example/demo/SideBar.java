@@ -2,13 +2,8 @@ package com.example.demo;
 
 import com.example.demo.interfacesGraphiques.loginpage;
 import com.example.demo.user.User;
-import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -16,15 +11,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.net.URL;
-import java.util.Optional;
-import java.util.ResourceBundle;
 
-public class SideBar implements Serializable {
+public class SideBar  {
 
     private User utilisateur;
 

@@ -16,6 +16,7 @@ import java.util.*;
 
 public class Jour implements Serializable, Comparable<Jour> {
     private LocalDate dateDuJour;
+    public Jour(){}
     @Override
     public int compareTo(Jour other) {
         return this.dateDuJour.compareTo(other.dateDuJour);
@@ -45,6 +46,10 @@ public class Jour implements Serializable, Comparable<Jour> {
 
 // allouerTache()
 
+    public void incrementerJour(int numberOfDays) {
+        LocalDate newDate = dateDuJour.plusDays(numberOfDays);
+        dateDuJour = newDate;
+    }
     public Pair<Creneau, Integer> choisirCreneauDansUneJournee(User user, Jour jourChoisi) {
         List<Creneau> lesCreneauxLibresDuJour = jourChoisi.getCreneaux();
         // Create a list of strings representing the creneaux
@@ -139,6 +144,10 @@ public class Jour implements Serializable, Comparable<Jour> {
         }
         return null;
     }
+    public int comparerDates(LocalDate date1, LocalDate date2) {
+        return date1.compareTo(date2);
+    }
+
 }
 
     // creneau rechercherLibre() hadi pour l'automatique, manuellement l'utilisateur c'est lui qui choisi

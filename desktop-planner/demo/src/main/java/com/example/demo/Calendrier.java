@@ -1,7 +1,9 @@
 package com.example.demo;
 
-import com.example.demo.planification.Creneau;
+
+
 import com.example.demo.planification.Tache;
+import com.example.demo.planification.TacheDecomposable;
 import com.example.demo.planification.TacheSimple;
 import com.example.demo.user.Planning;
 import com.example.demo.user.User;
@@ -11,9 +13,6 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -22,7 +21,7 @@ import java.io.Serializable;
 import java.util.Optional;
 
 
-public class Calendrier implements Serializable {
+public class Calendrier {
 
     private User user;
 
@@ -39,9 +38,13 @@ public class Calendrier implements Serializable {
     @FXML
     void affichage(ActionEvent event) {
          if(user.getPlanning()!=null){
-             for(Tache t : user.getPlanning().getTachesaPlanifier()){
-                 System.out.println("tache: " + t.getNom());
-                 System.out.println("cat: " + t.getCategorie());
+             for(TacheSimple tacheSimple : user.getPlanning().getTachesaPlanifier()){
+                     System.out.println("tache: " + tacheSimple.getNom());
+                     System.out.println("prio : " + tacheSimple.getPriorite());
+                     System.out.println("--- simple -- ");
+                     System.out.println("date: " + tacheSimple.getJournee().getDateDuJour().toString());
+                     System.out.println("heure debut : " + tacheSimple.getCreneauDeTache().getHeureDebut());
+                     System.out.println("heure fin : " + tacheSimple.getCreneauDeTache().getHeureFin());
              }
          }else{
              System.out.println("ya pas de planning");

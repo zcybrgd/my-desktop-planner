@@ -14,12 +14,12 @@ import java.util.Set;
 import java.util.TreeSet;
 
 public abstract class Tache implements Serializable {
-    private String nom;
-    private Duration duree;
-    private Prio priorite;
-    private LocalDate deadline;
-    private Categorie categorie;
-    private EtatTache stateDeTache=EtatTache.notRealized;
+    protected String nom;
+    protected Duration duree;
+    protected Prio priorite;
+    protected LocalDate deadline;
+    protected Categorie categorie;
+    protected EtatTache stateDeTache=EtatTache.notRealized;
 
   // peuvent etre pour la périodicité pour les taches simples et les jours des taches composées
     protected Set<Jour> journees = new TreeSet<>();
@@ -52,11 +52,12 @@ public abstract class Tache implements Serializable {
         return priorite;
     }
 
+    public Tache(){}
     public void setJournees(Set<Jour> journees) {
         this.journees = journees;
     }
 
-    abstract void planifierTache(User user);
+    //abstract void planifierTache(User user, Tache tache);
     // dans le cas ou la tache est inProgress ou notRealized
     // le système lui demande la durée supplémentaire nécessaire pour l'accomplir,
     // et le nouveau deadline si jamais elle en possède un.

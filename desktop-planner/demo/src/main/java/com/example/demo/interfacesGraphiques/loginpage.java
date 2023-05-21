@@ -3,6 +3,7 @@ package com.example.demo.interfacesGraphiques;
 
 import com.example.demo.HelloApplication;
 import com.example.demo.SideBar;
+import com.example.demo.planification.TacheSimple;
 import com.example.demo.user.User;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -19,10 +20,10 @@ import javafx.stage.Stage;
 import javafx.util.Pair;
 
 import java.io.IOException;
-import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Optional;
 
-public class loginpage implements Serializable {
+public class loginpage  {
     private User currentUser;
 
     public void setCurrentUser(User currentUser) {
@@ -114,6 +115,9 @@ public class loginpage implements Serializable {
                         currentStage.setOnCloseRequest(event2 -> {
                             if (controller.getUtilisateur().getPlanning() != null) {
                                 System.out.println("on a get ce planning: c le notre " + controller.getUtilisateur().getPlanning().getPeriode());
+                                for(TacheSimple t: controller.getUtilisateur().getPlanning().getTachesaPlanifier()){
+                                    System.out.println("les taches: " + t.getNom());
+                                }
                             }
                             // Show confirmation alert
                             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -126,7 +130,10 @@ public class loginpage implements Serializable {
                             alert.getButtonTypes().setAll(saveButton, cancelButton);
                             Optional<ButtonType> result = alert.showAndWait();
                             if (result.get() == saveButton) {
-                                User.saveUpdateUsertoFile(controller.getUtilisateur());
+                               // User.saveUpdateUsertoFile(controller.getUtilisateur());
+                                ArrayList<User> modified = new ArrayList<>();
+                                modified.add(controller.getUtilisateur());
+                                User.updateUsersFile(modified,HelloApplication.getFileNameUsers());
                             } else {
                                 // User clicked Cancel button, close application
                                 Platform.exit();

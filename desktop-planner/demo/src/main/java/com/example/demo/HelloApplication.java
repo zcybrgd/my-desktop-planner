@@ -8,9 +8,9 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class HelloApplication extends Application {
+public class HelloApplication extends Application{
 
-    private static String fileNameUsers = "users.ser";
+    private static String fileNameUsers = "users.bin";
 
     public static String getFileNameUsers() {
         return fileNameUsers;

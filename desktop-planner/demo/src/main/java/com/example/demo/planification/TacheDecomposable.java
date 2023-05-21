@@ -29,7 +29,7 @@ public class TacheDecomposable extends Tache implements Decomposable, Serializab
     // Ses sous-tâches auront le même nom que la tâche décomposée auquel sera concaténée le numéro de la sous tâche.
     public void changerNom(){}
     public void planifierTache(User user){
-   // Une tâche décomposable peut être planifiée en plusieurs créneaux jusqu'à atteindre la durée prévue.
+        // Une tâche décomposable peut être planifiée en plusieurs créneaux jusqu'à atteindre la durée prévue.
         for(TacheSimple sousTache: sousTaches){
             user.getPlanning().getTachesaPlanifier().add(sousTache);
         }
@@ -40,6 +40,7 @@ public class TacheDecomposable extends Tache implements Decomposable, Serializab
     public void evaluerTache(){
 
     }
+    public TacheDecomposable(){}
     public void decomposer(int nbrDecompo, User user){
         for(int i = 0;i<nbrDecompo;i++){
             LocalDate dateDejourneeChoisie = user.getPlanning().choisirDateDansPeriode();
@@ -50,6 +51,7 @@ public class TacheDecomposable extends Tache implements Decomposable, Serializab
             TacheSimple sousTache = new TacheSimple(this.getNom() + " "+ i,dureeDeSousTache,this.getPriorite(),this.getDeadline(),this.getCategorie(),0);
             sousTache.setCreneauDeTache(creneauChoisi.getKey());
             sousTache.getJournees().add(journeeChoisie);
+            sousTache.setJournee(journeeChoisie);
             sousTaches.add(sousTache);
         }
     }

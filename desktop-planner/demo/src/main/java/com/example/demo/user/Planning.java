@@ -22,17 +22,17 @@ import java.util.*;
 
 public class Planning implements Serializable {
     private List<Jour> jours = new ArrayList<Jour>();
-    private Set<Tache> tachesaPlanifier = new TreeSet<>();
+    private Set<TacheSimple> tachesaPlanifier = new TreeSet<>();
     private LocalDate dateDebut;
     private LocalDate dateFin;
     private Pair<LocalDate, LocalDate> periode;
 
 
-    public Set<Tache> getTachesaPlanifier() {
+    public Set<TacheSimple> getTachesaPlanifier() {
         return tachesaPlanifier;
     }
 
-    public void setTachesaPlanifier(Set<Tache> tachesaPlanifier) {
+    public void setTachesaPlanifier(Set<TacheSimple> tachesaPlanifier) {
         this.tachesaPlanifier = tachesaPlanifier;
     }
 
@@ -45,6 +45,7 @@ public class Planning implements Serializable {
     // représente les créneaux libres de 13h à 15h et de 18h à 22h.
     private List<Pair<LocalTime, LocalTime>> creneaux;
 
+    public Planning(){}
      public Planning(LocalDate dateDebut, LocalDate dateFin){
         this.dateDebut = dateDebut;
         this.dateFin = dateFin;
@@ -266,7 +267,7 @@ public class Planning implements Serializable {
                                 Duration dureeDeTache = creneauChoisi.getKey().calculerDuree();
                                 System.out.println("On va planifier une tache simple");
                                 TacheSimple tacheaIntroduire = new TacheSimple(dureeDeTache, creneauChoisi.getKey(), journeeChoisie);
-                                user.introduireUneTache(tacheaIntroduire, "Simple", creneauChoisi, journeeChoisie);
+                                user.introduireUneTache(tacheaIntroduire, "Simple", creneauChoisi, journeeChoisie,user);
                             } else {
                                 System.out.println("Pas de créneau à décomposer");
                             }
@@ -305,7 +306,7 @@ public class Planning implements Serializable {
                                 Duration duration = Duration.ofMinutes(Long.parseLong(durationString));
                                 TacheDecomposable tacheaIntroduire = new TacheDecomposable(duration);
                                 System.out.println("duration : " + duration);
-                                user.introduireUneTache(tacheaIntroduire, "Decomposable", null, null);
+                                user.introduireUneTache(tacheaIntroduire, "Decomposable", null, null,user);
                             } catch (NumberFormatException ex) {
                                 // Handle invalid input format
                                 Alert alert = new Alert(Alert.AlertType.ERROR);

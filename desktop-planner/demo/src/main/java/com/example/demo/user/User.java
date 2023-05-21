@@ -26,6 +26,9 @@ import java.util.Optional;
 
 
 public class User implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 4652182404050987967L;
     private String pseudo;
     private String mdp;
     private Planning planning;
@@ -55,7 +58,6 @@ public class User implements Serializable {
     // creerProjet()
     // supprimerProjet()
     // modifierProjet()
-    // validerPlanning()
     // LocalTime dureeCat(), la durée du temps passé sur les taches d'une catégorie
 
     public static Pair<Boolean, User> seConnecter(String username, String password) {
@@ -63,10 +65,10 @@ public class User implements Serializable {
         ArrayList<User> users = loadUsersFromFile(HelloApplication.getFileNameUsers());
         for (User user : users) {
             if (user.getPseudo().equals(username) && user.getMdp().equals(password)) {
-                return new Pair<Boolean, User> (true, user); // un utilisateur existe avec ce username et ce mot de passe
+                return new Pair<>(true, user); // un utilisateur existe avec ce username et ce mot de passe
             }
         }
-        return new Pair<Boolean, User> (false, null); // y a aucun utilisateur qui existe
+        return new Pair<>(false, null); // y a aucun utilisateur qui existe
     }
 
 
@@ -99,7 +101,7 @@ public class User implements Serializable {
         setPlanning(nouveauPlanning);
     }
 
-    public void introduireUneTache(Tache tache, String type, Pair<Creneau, Integer> creneauChoisi, Jour journeeChoisie) {
+    public void introduireUneTache(Tache tache, String type, Pair<Creneau, Integer> creneauChoisi, Jour journeeChoisie, User user) {
         // Create the fields for entering task data
         final int[] periodicite = {0};
         final int[] nbrdeDecompo = {0};
@@ -221,7 +223,7 @@ public class User implements Serializable {
                     tacheSimple.setDeadline(deadline);
                     tacheSimple.setCategorie(selectedCategorie);
                     tacheSimple.setNbrJourDePeriodicite(periodicite[0]);
-                    tacheSimple.planifierTache(this);
+                    tacheSimple.planifierTache(user);
                 }
                 if (tache instanceof TacheDecomposable) {
                     TacheDecomposable tacheDecomposable = (TacheDecomposable) tache;
@@ -229,8 +231,8 @@ public class User implements Serializable {
                     tacheDecomposable.setDeadline(deadline);
                     tacheDecomposable.setPriorite(priorite);
                     tacheDecomposable.setCategorie(selectedCategorie);
-                    tacheDecomposable.decomposer(nbrdeDecompo[0],this);
-                    tacheDecomposable.planifierTache(this);
+                    tacheDecomposable.decomposer(nbrdeDecompo[0],user);
+                    tacheDecomposable.planifierTache(user);
                 }
             }
         });
@@ -250,34 +252,50 @@ public class User implements Serializable {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileName))) {
             users = (ArrayList<User>) ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
-            System.out.println("Le fichier n'existe pas encore ou est vide");
+            System.out.println(e.getMessage());
         }
         return users;
     }
 
     public static void saveUpdateUsertoFile(User user){
         ArrayList<User> users = User.loadUsersFromFile(HelloApplication.getFileNameUsers());
-        Pair<User, Integer> ourUser = User.findUserByPseudoname(users,user.getPseudo());
-        if (ourUser != null) {
-            System.out.println("user : " + user.getPseudo() + " mdp : " + user.getMdp());
-            System.out.println("periode : " + user.getPlanning().getPeriode());
-            User userUp = new User(user.getPseudo(), user.getMdp(), user.planning, user.encouragement, user.Badges, user.getHistorique(), user.userProjects, user.minTaskPerDay, user.getMinDureeCreneau());
-            users.set(ourUser.getValue(), userUp);
-            User.saveUsersToFile(users, HelloApplication.getFileNameUsers());
-        }
-    }
-    public static Pair<User, Integer> findUserByPseudoname(ArrayList<User> users, String targetPseudoname) {
-        int cpt=-1;
-        for (User user : users) {
-            cpt++;
-            if (user.getPseudo().equals(targetPseudoname)) {
-                return new Pair<>(user,cpt);
+        for (User userO : users) {
+            if (userO.getPseudo().equals(user.getPseudo())) {
+                for(TacheSimple t: user.getPlanning().getTachesaPlanifier()){
+                    System.out.println("les taches: " + t.getNom());
+                }
+                if(userO.getPlanning()!=null){
+                    for(TacheSimple t: user.getPlanning().getTachesaPlanifier()){
+                        System.out.println("les taches: tae user 0 " + t.getNom());
+                    }
+                }
+                users.remove(userO);
+                break;
             }
         }
-        // user not found
-        return null;
+        users.add(user);
+        User.saveUsersToFile(users, HelloApplication.getFileNameUsers());
+
+    }
+    public static void updateUsersFile(ArrayList<User> modifiedUsers, String fileName) {
+        ArrayList<User> existingUsers = loadUsersFromFile(fileName);
+
+        // Merge the modifiedUsers into the existingUsers
+        for (User modifiedUser : modifiedUsers) {
+            for (int i = 0; i < existingUsers.size(); i++) {
+                User existingUser = existingUsers.get(i);
+                if (existingUser.getPseudo().equals(modifiedUser.getPseudo())) {
+                    // Update the existingUser with the modifiedUser's data
+                    existingUsers.set(i, modifiedUser);
+                    break;
+                }
+            }
+        }
+        // Save the updated users to the file
+        saveUsersToFile(existingUsers, fileName);
     }
 
+    // validerPlanning()
     public boolean confirmerNouvellePeriode() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmation");

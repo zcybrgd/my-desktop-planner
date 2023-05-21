@@ -1,5 +1,6 @@
 package com.example.demo.planification;
 
+
 import javafx.scene.paint.Color;
 
 import java.io.Serializable;
@@ -11,7 +12,7 @@ import java.util.Map;
 public class Categorie implements Serializable {
 
     private String nom;
-    private Color couleur;
+    private transient Color couleur;
 
     // une Map pour stocker les couleurs des différentes catégories
     private static Map<String, Color> couleursParDefaut = new HashMap<>();
@@ -37,6 +38,7 @@ public class Categorie implements Serializable {
         this.nom = nom;
         this.couleur = couleur;
     }
+    public Categorie(){}
 
     // getters et setters pour nom et couleur
     public String getNom() {
