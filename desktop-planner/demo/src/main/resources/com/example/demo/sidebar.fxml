@@ -11,7 +11,7 @@
 
 <FlowPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.SideBar">
    <children>
-      <AnchorPane fx:id="mainPage" prefHeight="600.0" prefWidth="900.0">
+      <AnchorPane fx:id="mainPage" prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: white;">
          <children>
             <AnchorPane fx:id="sideIcons" layoutY="-2.0" prefHeight="600.0" prefWidth="58.0">
                <children>

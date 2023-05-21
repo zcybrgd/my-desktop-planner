@@ -16,6 +16,7 @@ public class TacheSimple extends Tache implements Serializable, Comparable<Tache
         // Default constructor required for deserialization
     }
 
+    public void changerNom(){}
 
 
     @Override

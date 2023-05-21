@@ -32,28 +32,33 @@ public class User implements Serializable {
     private String pseudo;
     private String mdp;
     private Planning planning;
-    private int[] encouragement;
-    private Badge[] Badges ;// nbr de badges gagnés
     private ArrayList<Planning> Historique;
-    private ArrayList<Projet> userProjects;
     private int minTaskPerDay; // le minimum des taches requis pour une journée
+
+    public void setMinTaskPerDay(int minTaskPerDay) {
+        this.minTaskPerDay = minTaskPerDay;
+    }
+
+    public int getMinTaskPerDay() {
+        return minTaskPerDay;
+    }
+
+
     private Duration minDureeCreneau=Duration.ofMinutes(30);;
 
     public User(String pseudo, String mdp){
         this.pseudo = pseudo;
         this.mdp = mdp;
     }
-   public User(String pseudo, String mdp, Planning planning,int[] encouragement, Badge[] Badges, ArrayList<Planning> Historique, ArrayList<Projet> userProjects, int minTaskPerDay, Duration minDureeCreneau){
+   public User(String pseudo, String mdp, Planning planning, ArrayList<Planning> Historique, int minTaskPerDay, Duration minDureeCreneau){
         this.pseudo = pseudo;
         this.mdp = mdp;
         this.planning = planning;
-        this.encouragement = encouragement;
-        this.Badges = Badges;
         this.Historique = Historique;
-        this.userProjects = userProjects;
         this.minTaskPerDay = minTaskPerDay;
         this.minDureeCreneau = minDureeCreneau;
    }
+
 
     // creerProjet()
     // supprimerProjet()

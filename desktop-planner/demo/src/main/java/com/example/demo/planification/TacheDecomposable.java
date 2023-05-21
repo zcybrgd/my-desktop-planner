@@ -27,7 +27,6 @@ public class TacheDecomposable extends Tache implements Decomposable, Serializab
     }
 
     // Ses sous-tâches auront le même nom que la tâche décomposée auquel sera concaténée le numéro de la sous tâche.
-    public void changerNom(){}
     public void planifierTache(User user){
         // Une tâche décomposable peut être planifiée en plusieurs créneaux jusqu'à atteindre la durée prévue.
         for(TacheSimple sousTache: sousTaches){

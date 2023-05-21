@@ -94,6 +94,9 @@ public class SideBar  {
         paramItem.setOnAction(calendrier->{
             showPage("param.fxml");
         });
+        projectsItem.setOnAction((mesprojets->{
+            showPage("projets.fxml");
+        }));
         logoutButton.setOnAction(logout->{
             Stage currentStage = (Stage) logoutButton.getScene().getWindow();
             // Close the current window
@@ -122,6 +125,14 @@ public class SideBar  {
             mainPage.getChildren().add(0,page); // Add the new page
             if(fxmlFile.equals("calendrier.fxml")){
                 Calendrier controller = fxmlLoader.getController();
+                controller.setUser(utilisateur);
+            }
+            if(fxmlFile.equals("param.fxml")){
+                Param controller = fxmlLoader.getController();
+                controller.setUser(utilisateur);
+            }
+            if(fxmlFile.equals("projets.fxml")){
+                Projets controller = fxmlLoader.getController();
                 controller.setUser(utilisateur);
             }
         } catch (IOException e) {

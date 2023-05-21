@@ -27,6 +27,33 @@ public class Planning implements Serializable {
     private LocalDate dateFin;
     private Pair<LocalDate, LocalDate> periode;
 
+    private int[] encouragement;
+    private ArrayList<Badge> Badges ;// nbr de badges gagnés
+    private ArrayList<Projet> userProjects = new ArrayList<>();
+
+    public ArrayList<Projet> getUserProjects() {
+        return userProjects;
+    }
+
+    public void setUserProjects(ArrayList<Projet> userProjects) {
+        this.userProjects = userProjects;
+    }
+
+    public void setBadges(ArrayList<Badge> badges) {
+        Badges = badges;
+    }
+
+    public ArrayList<Badge> getBadges() {
+        return Badges;
+    }
+
+    public int[] getEncouragement() {
+        return encouragement;
+    }
+
+    public void setEncouragement(int[] encouragement) {
+        this.encouragement = encouragement;
+    }
 
     public Set<TacheSimple> getTachesaPlanifier() {
         return tachesaPlanifier;

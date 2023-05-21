@@ -57,7 +57,7 @@ public abstract class Tache implements Serializable {
         this.journees = journees;
     }
 
-    //abstract void planifierTache(User user, Tache tache);
+
     // dans le cas ou la tache est inProgress ou notRealized
     // le système lui demande la durée supplémentaire nécessaire pour l'accomplir,
     // et le nouveau deadline si jamais elle en possède un.
