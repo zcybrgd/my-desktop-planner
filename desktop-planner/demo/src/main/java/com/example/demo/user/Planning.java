@@ -154,17 +154,19 @@ public class Planning implements Serializable {
     }
     public Jour chercherJourDansPeriode(LocalDate date) {
 
-        // Vérifier que la date recherchée est dans la période donnée
-        if (date.isBefore(dateDebut) || date.isAfter(dateFin)) {
-            return null;
-        }
-
-        // Rechercher le jour correspondant à la date
-        for (Jour jour : this.jours) {
-            if (jour.getDateDuJour().isEqual(date)) {
-                return jour;
+        try{
+            if (date.isBefore(dateDebut) || date.isAfter(dateFin)) {
+                return null;
             }
-        }
+            // Vérifier que la date recherchée est dans la période donnée
+
+            // Rechercher le jour correspondant à la date
+            for (Jour jour : this.jours) {
+                if (jour.getDateDuJour().isEqual(date)) {
+                    return jour;
+                }
+            }
+        }catch(NullPointerException e){System.out.println(e.getMessage());}
         // Si la date n'a pas été trouvée, retourner null
         return null;
     }

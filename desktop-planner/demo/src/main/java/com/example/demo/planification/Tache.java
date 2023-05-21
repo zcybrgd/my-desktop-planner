@@ -5,7 +5,7 @@ package com.example.demo.planification;
 import com.example.demo.enumerations.EtatTache;
 import com.example.demo.enumerations.Prio;
 import com.example.demo.user.Jour;
-import com.example.demo.user.User;
+
 
 import java.io.Serializable;
 import java.time.Duration;

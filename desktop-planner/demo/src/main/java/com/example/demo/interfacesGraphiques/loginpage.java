@@ -113,12 +113,6 @@ public class loginpage  {
                         // Set the scene for the current stage
                         currentStage.setScene(scene);
                         currentStage.setOnCloseRequest(event2 -> {
-                            if (controller.getUtilisateur().getPlanning() != null) {
-                                System.out.println("on a get ce planning: c le notre " + controller.getUtilisateur().getPlanning().getPeriode());
-                                for(TacheSimple t: controller.getUtilisateur().getPlanning().getTachesaPlanifier()){
-                                    System.out.println("les taches: " + t.getNom());
-                                }
-                            }
                             // Show confirmation alert
                             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                             alert.setTitle("Sauvegarder votre activité dans l'application");

@@ -18,6 +18,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Optional;
 
 
@@ -61,6 +62,13 @@ public class Calendrier {
         Scene previousScene = primaryStage.getScene(); // Get the previous scene
 
         if (user.confirmerNouvellePeriode()) {
+            if(user.getPlanning()!=null && user.getHistorique()==null){
+                ArrayList<Planning> historique = new ArrayList<>();
+                historique.add(user.getPlanning());
+                user.setHistorique(historique);
+            }else if(user.getPlanning()!=null && user.getHistorique()!=null){
+                user.getHistorique().add(user.getPlanning());
+            }
             Scene scene = user.fixerUneNouvellePériode(user);
             Stage stage = new Stage();
             stage.setScene(scene);
@@ -71,6 +79,12 @@ public class Calendrier {
             System.out.println("on a choisi aucun planning; cet user: " + user.getPseudo());
             if (user.getPlanning() != null) {
                 System.out.println("old planning of the user: " + user.getPlanning().getPeriode());
+                System.out.println("Historique");
+                if(user.getHistorique()!=null){
+                    for(Planning planAncien : user.getHistorique()){
+                        System.out.println("Historique de : " + planAncien.getDateFin());
+                    }
+                }
             }
         }
 
