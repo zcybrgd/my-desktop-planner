@@ -1,13 +1,17 @@
 package com.example.demo.planification;
 
+import com.example.demo.enumerations.EtatTache;
 import com.example.demo.enumerations.Prio;
 import com.example.demo.user.Jour;
 import com.example.demo.user.User;
+import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.TextInputDialog;
 
 
 import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.Set;
 
 public class TacheSimple extends Tache implements Serializable, Comparable<TacheSimple>, Cloneable {
@@ -16,7 +20,23 @@ public class TacheSimple extends Tache implements Serializable, Comparable<Tache
         // Default constructor required for deserialization
     }
 
-    public void changerNom(){}
+    public void changerNom(User user){
+        // Create the text input dialog for new name entry
+        TextInputDialog inputDialog = new TextInputDialog();
+        inputDialog.setTitle("Renommer la tache");
+        inputDialog.setHeaderText("Entrer un nouveau nom pour votre tache");
+        inputDialog.setContentText("Le nouveau nom:");
+
+        // Show the text input dialog and get the entered name
+        Optional<String> result = inputDialog.showAndWait();
+        result.ifPresent(newName -> {
+            System.out.println("New name: " + newName);
+            // Perform the desired action with the entered new name
+            this.setNom(newName);
+            user.getPlanning().getTachesaPlanifier().add(this);
+        });
+    }
+
 
 
     @Override
@@ -99,8 +119,21 @@ public class TacheSimple extends Tache implements Serializable, Comparable<Tache
     void replanifierTache(){
 
     }
-    void evaluerTache(){
+    public void evaluerTache(User user){
+        // Create the choice dialog for evaluation selection
+        ChoiceDialog<EtatTache> choiceDialog = new ChoiceDialog<>(EtatTache.notRealized, EtatTache.values());
+        choiceDialog.setTitle("Evaluation de la tache");
+        choiceDialog.setHeaderText("évaluer la tache");
+        choiceDialog.setContentText("Choisissez");
 
+        // Show the choice dialog and get the selected evaluation
+        Optional<EtatTache> result = choiceDialog.showAndWait();
+        result.ifPresent(etatTache -> {
+            System.out.println("Selected evaluation: " + etatTache);
+            this.setStateDeTache(etatTache);
+            user.getPlanning().getTachesaPlanifier().add(this);
+            // Perform the desired action with the selected evaluation
+        });
     }
 
     public void setCreneauDeTache(Creneau creneauDeTache) {

@@ -38,9 +38,6 @@ public class Calendrier {
     @FXML
     private VBox boxAffichageTaches;
 
-    @FXML
-    private ScrollPane scrollAffichageTaches;
-
 
     @FXML
     void planification(ActionEvent event) {
@@ -82,7 +79,7 @@ public class Calendrier {
                 }
                 // Create a button for the task
                 Button taskButton = new Button(tacheSimple.getNom());
-                taskButton.setStyle("-fx-font-size: 16px; -fx-background-color: white; -fx-border-color: black; -fx-border-radius: 5;");
+                taskButton.setStyle("-fx-font-size: 16px; -fx-background-color: white; -fx-border-color: #FF4081; -fx-border-radius: 5;");
                 taskButton.setPrefWidth(200);
                 taskButton.setOnAction(clickedOnTask->{
                     System.out.println("clicked on this task : " + tacheSimple.getNom());
@@ -103,37 +100,11 @@ public class Calendrier {
                     // Handle Evaluer Tache button
                     dialog.setResultConverter(dialogButton -> {
                         if (dialogButton == evaluerButton) {
-                            // Create the choice dialog for evaluation selection
-                            ChoiceDialog<EtatTache> choiceDialog = new ChoiceDialog<>(EtatTache.notRealized, EtatTache.values());
-                            choiceDialog.setTitle("Evaluation de la tache");
-                            choiceDialog.setHeaderText("évaluer la tache");
-                            choiceDialog.setContentText("Choisissez");
-
-                            // Show the choice dialog and get the selected evaluation
-                            Optional<EtatTache> result = choiceDialog.showAndWait();
-                            result.ifPresent(etatTache -> {
-                                System.out.println("Selected evaluation: " + etatTache);
-                                tacheSimple.setStateDeTache(etatTache);
-                                user.getPlanning().getTachesaPlanifier().add(tacheSimple);
-                                AfficherTasks();
-                                // Perform the desired action with the selected evaluation
-                            });
+                            tacheSimple.evaluerTache(user);
+                            AfficherTasks();
                         } else if (dialogButton == renommerButton) {
-                            // Create the text input dialog for new name entry
-                            TextInputDialog inputDialog = new TextInputDialog();
-                            inputDialog.setTitle("Renommer la tache");
-                            inputDialog.setHeaderText("Entrer un nouveau nom pour votre tache");
-                            inputDialog.setContentText("Le nouveau nom:");
-
-                            // Show the text input dialog and get the entered name
-                            Optional<String> result = inputDialog.showAndWait();
-                            result.ifPresent(newName -> {
-                                System.out.println("New name: " + newName);
-                                // Perform the desired action with the entered new name
-                                tacheSimple.setNom(newName);
-                                user.getPlanning().getTachesaPlanifier().add(tacheSimple);
-                                AfficherTasks();
-                            });
+                            tacheSimple.changerNom(user);
+                            AfficherTasks();
                         }
                         // Return null for cancel button or if no option was selected
                         return null;
@@ -180,7 +151,7 @@ public class Calendrier {
                 taskBoxContainer.getChildren().add(taskBox);
             }
 
-// Add the ScrollPane to the main VBox
+             // Add the ScrollPane to the main VBox
             boxAffichageTaches.getChildren().add(scrollPane);
 
         }

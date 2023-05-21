@@ -3,6 +3,7 @@ package com.example.demo.user;
 
 import com.example.demo.Exceptions.DateAnterieure;
 import com.example.demo.HelloApplication;
+import com.example.demo.Projets;
 import com.example.demo.enumerations.Prio;
 import com.example.demo.planification.*;
 import javafx.collections.FXCollections;
@@ -13,6 +14,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.stage.Stage;
 import javafx.util.Pair;
 import javafx.util.StringConverter;
 import javafx.util.converter.IntegerStringConverter;
@@ -59,10 +61,44 @@ public class User implements Serializable {
         this.minDureeCreneau = minDureeCreneau;
    }
 
+   public void creerProjet(Projet nvProjet){
+       this.getPlanning().getUserProjects().add(nvProjet);
+   }
 
-    // creerProjet()
     // supprimerProjet()
-    // modifierProjet()
+    public void modifierProjet(Projet projet){
+        // Create a new stage for modifying the project
+        Stage modifyStage = new Stage();
+
+        // Create input fields for project name and description
+        TextField nameField = new TextField(projet.getNom());
+        TextArea descriptionArea = new TextArea(projet.getDescription());
+
+        // Create a VBox to hold the input fields
+        VBox modifyBox = new VBox(10);
+        modifyBox.getChildren().addAll(new Label("Nom du projet:"), nameField, new Label("Description:"), descriptionArea);
+        modifyBox.setPadding(new Insets(10));
+
+        // Create a button to validate the modifications
+        Button validateButton = new Button("Valider les modifications");
+        validateButton.setOnAction(validate -> {
+            // Update the project with the modified information
+            projet.setNom(nameField.getText());
+            projet.setDescription(descriptionArea.getText());
+            // Close the modify stage
+            modifyStage.close();
+        });
+
+        // Create a VBox to hold the modify box and the validate button
+        VBox rootBox = new VBox(10);
+        rootBox.getChildren().addAll(modifyBox, validateButton);
+        rootBox.setPadding(new Insets(10));
+
+        // Create a scene and set it as the content of the modify stage
+        Scene scene = new Scene(rootBox);
+        modifyStage.setScene(scene);
+        modifyStage.show();
+    }
     // LocalTime dureeCat(), la durée du temps passé sur les taches d'une catégorie
 
     public static Pair<Boolean, User> seConnecter(String username, String password) {

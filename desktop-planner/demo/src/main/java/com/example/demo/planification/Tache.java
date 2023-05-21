@@ -5,6 +5,7 @@ package com.example.demo.planification;
 import com.example.demo.enumerations.EtatTache;
 import com.example.demo.enumerations.Prio;
 import com.example.demo.user.Jour;
+import com.example.demo.user.User;
 
 
 import java.io.Serializable;
@@ -62,7 +63,7 @@ public abstract class Tache implements Serializable {
     // le système lui demande la durée supplémentaire nécessaire pour l'accomplir,
     // et le nouveau deadline si jamais elle en possède un.
     abstract void replanifierTache();
-    abstract void evaluerTache();
+    abstract void evaluerTache(User user);
     public Tache(Duration duree){
         this.duree = duree;
     }
