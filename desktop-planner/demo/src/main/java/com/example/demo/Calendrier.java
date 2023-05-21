@@ -2,24 +2,27 @@ package com.example.demo;
 
 
 
-import com.example.demo.planification.Tache;
-import com.example.demo.planification.TacheDecomposable;
+
 import com.example.demo.planification.TacheSimple;
 import com.example.demo.user.Planning;
 import com.example.demo.user.User;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
-import java.io.Serializable;
+
+
 import java.util.ArrayList;
-import java.util.Optional;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
 
 
 public class Calendrier {
@@ -30,6 +33,12 @@ public class Calendrier {
     public void setUser(User user) {
         this.user = user;
     }
+    @FXML
+    private VBox boxAffichageTaches;
+
+    @FXML
+    private ScrollPane scrollAffichageTaches;
+
 
     @FXML
     void planification(ActionEvent event) {
@@ -47,6 +56,27 @@ public class Calendrier {
                      System.out.println("heure debut : " + tacheSimple.getCreneauDeTache().getHeureDebut());
                      System.out.println("heure fin : " + tacheSimple.getCreneauDeTache().getHeureFin());
              }
+             Set<TacheSimple> tacheSimpleSet = user.getPlanning().getTachesaPlanifier() ; // Your Set<TacheSimple> instance
+             // Clear the existing buttons
+             boxAffichageTaches.getChildren().clear();
+             // Sort the tasks by date
+             List<TacheSimple> sortedTasks = new ArrayList<>(tacheSimpleSet);
+             sortedTasks.sort(Comparator.comparing(t -> t.getJournee().getDateDuJour()));
+            // Iterate over the sorted tasks and create buttons
+             String currentDate = null;
+             for (TacheSimple tacheSimple : sortedTasks) {
+                 String taskDate = tacheSimple.getJournee().getDateDuJour().toString();
+                 // Add a separator between tasks of different dates
+                 if (!taskDate.equals(currentDate)) {
+                     Label dateLabel = new Label(taskDate);
+                     boxAffichageTaches.getChildren().add(dateLabel);
+                     currentDate = taskDate;
+                 }
+
+                 // Create a button for the task
+                 Button taskButton = new Button(tacheSimple.getNom() + " - " + tacheSimple.getPriorite());
+                 boxAffichageTaches.getChildren().add(taskButton);
+             }
          }else{
              System.out.println("ya pas de planning");
          }
@@ -60,7 +90,6 @@ public class Calendrier {
 
     public Scene calendarInit(Stage primaryStage) {
         Scene previousScene = primaryStage.getScene(); // Get the previous scene
-
         if (user.confirmerNouvellePeriode()) {
             if(user.getPlanning()!=null && user.getHistorique()==null){
                 ArrayList<Planning> historique = new ArrayList<>();
@@ -76,7 +105,6 @@ public class Calendrier {
             stage.setOnCloseRequest(event -> primaryStage.setScene(previousScene)); // Restore the previous scene on close
             stage.show(); // display the window modally
         } else {
-            System.out.println("on a choisi aucun planning; cet user: " + user.getPseudo());
             if (user.getPlanning() != null) {
                 System.out.println("old planning of the user: " + user.getPlanning().getPeriode());
                 System.out.println("Historique");
@@ -93,8 +121,6 @@ public class Calendrier {
         } else {
             System.out.println("periode non existante mais il a fixer");
         }
-
-
         return previousScene;
     }
 
