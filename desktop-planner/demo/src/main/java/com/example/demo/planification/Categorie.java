@@ -13,6 +13,7 @@ public class Categorie implements Serializable {
 
     private String nom;
     private transient Color couleur;
+    private String color;
 
     // une Map pour stocker les couleurs des différentes catégories
     private static Map<String, Color> couleursParDefaut = new HashMap<>();
@@ -30,7 +31,7 @@ public class Categorie implements Serializable {
     // constructeur pour une catégorie existante avec une couleur par défaut
     public Categorie(String nom) {
         this.nom = nom;
-        this.couleur = couleursParDefaut.getOrDefault(nom, Color.BLACK);
+        this.couleur = couleursParDefaut.getOrDefault(nom, Color.GRAY);
     }
 
     // constructeur pour une nouvelle catégorie avec une couleur personnalisée

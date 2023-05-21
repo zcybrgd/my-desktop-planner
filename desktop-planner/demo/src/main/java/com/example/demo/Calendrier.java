@@ -3,17 +3,24 @@ package com.example.demo;
 
 
 
+import com.example.demo.planification.Categorie;
+import com.example.demo.planification.Creneau;
 import com.example.demo.planification.TacheSimple;
 import com.example.demo.user.Planning;
 import com.example.demo.user.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -56,28 +63,86 @@ public class Calendrier {
                      System.out.println("heure debut : " + tacheSimple.getCreneauDeTache().getHeureDebut());
                      System.out.println("heure fin : " + tacheSimple.getCreneauDeTache().getHeureFin());
              }
-             Set<TacheSimple> tacheSimpleSet = user.getPlanning().getTachesaPlanifier() ; // Your Set<TacheSimple> instance
-             // Clear the existing buttons
+             Set<TacheSimple> tacheSimpleSet = user.getPlanning().getTachesaPlanifier();
+
+// Clear the existing buttons
              boxAffichageTaches.getChildren().clear();
-             // Sort the tasks by date
+             boxAffichageTaches.setSpacing(10);
+
+// Create a VBox to contain the task buttons
+             VBox taskBoxContainer = new VBox(10);
+             taskBoxContainer.setPrefWidth(220); // Set the preferred width for the VBox
+
+// Wrap the VBox inside a ScrollPane
+             ScrollPane scrollPane = new ScrollPane(taskBoxContainer);
+             scrollPane.setFitToWidth(true);
+             scrollPane.setStyle("-fx-background-color: transparent;"); // Make the background transparent
+
+// Sort the tasks by date
              List<TacheSimple> sortedTasks = new ArrayList<>(tacheSimpleSet);
              sortedTasks.sort(Comparator.comparing(t -> t.getJournee().getDateDuJour()));
-            // Iterate over the sorted tasks and create buttons
+
+// Iterate over the sorted tasks and create buttons
              String currentDate = null;
              for (TacheSimple tacheSimple : sortedTasks) {
                  String taskDate = tacheSimple.getJournee().getDateDuJour().toString();
+
                  // Add a separator between tasks of different dates
                  if (!taskDate.equals(currentDate)) {
                      Label dateLabel = new Label(taskDate);
-                     boxAffichageTaches.getChildren().add(dateLabel);
+                     dateLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 10px 0;");
+                     taskBoxContainer.getChildren().add(dateLabel);
                      currentDate = taskDate;
                  }
 
                  // Create a button for the task
-                 Button taskButton = new Button(tacheSimple.getNom() + " - " + tacheSimple.getPriorite());
-                 boxAffichageTaches.getChildren().add(taskButton);
+                 Button taskButton = new Button(tacheSimple.getNom());
+                 taskButton.setStyle("-fx-font-size: 16px; -fx-background-color: white; -fx-border-color: black; -fx-border-radius: 5;");
+                 taskButton.setPrefWidth(200);
+
+                 // Create a label for the task priority
+                 Label priorityLabel = new Label(tacheSimple.getPriorite().toString());
+                 priorityLabel.setStyle("-fx-font-size: 12px;");
+
+                 // Create a label for the task creneau
+                 Creneau creneau = tacheSimple.getCreneauDeTache();
+                 Label creneauLabel = new Label(creneau.getHeureDebut() + " - " + creneau.getHeureFin());
+                 creneauLabel.setStyle("-fx-font-size: 12px;");
+
+                 // Create a label for the task etat
+                 Label etatLabel = new Label(tacheSimple.getStateDeTache().toString());
+                 etatLabel.setStyle("-fx-font-size: 12px;");
+
+                 // Create a colored circle representing the category
+                 Circle categoryCircle = new Circle(8);
+                 categoryCircle.setStyle("-fx-stroke: black;");
+                 Categorie category = tacheSimple.getCategorie();
+                 if (category != null && category.getCouleur() != null) {
+                     Color categoryColor = category.getCouleur();
+                     String categoryColorHex = String.format("#%02x%02x%02x", (int)(categoryColor.getRed() * 255),
+                             (int)(categoryColor.getGreen() * 255), (int)(categoryColor.getBlue() * 255));
+                     categoryCircle.setStyle("-fx-fill: " + categoryColorHex + ";");
+                 }
+
+                 // Create a VBox to contain the task details
+                 VBox taskDetailsBox = new VBox(5);
+                 taskDetailsBox.getChildren().addAll(priorityLabel, creneauLabel, etatLabel);
+                 taskDetailsBox.setAlignment(Pos.CENTER_LEFT);
+
+                 // Create a HBox to contain the category circle and task details
+                 HBox taskBox = new HBox(10);
+                 taskBox.getChildren().addAll(categoryCircle, taskButton, taskDetailsBox);
+                 taskBox.setAlignment(Pos.CENTER_LEFT);
+                 taskBox.setPadding(new Insets(5));
+
+                 taskBoxContainer.getChildren().add(taskBox);
              }
-         }else{
+
+// Add the ScrollPane to the main VBox
+             boxAffichageTaches.getChildren().add(scrollPane);
+
+         }
+         else{
              System.out.println("ya pas de planning");
          }
     }

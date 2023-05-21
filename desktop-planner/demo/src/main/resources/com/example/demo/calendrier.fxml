@@ -8,9 +8,9 @@
 <AnchorPane prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.Calendrier">
    <children>
       <Button layoutX="730.0" layoutY="106.0" mnemonicParsing="false" onAction="#planification" text="Planifier" />
-      <Button layoutX="636.0" layoutY="52.0" mnemonicParsing="false" onAction="#fixer" text="Fixer une nouvelle période pour le planning" />
+      <Button layoutX="690.0" layoutY="54.0" mnemonicParsing="false" onAction="#fixer" prefHeight="26.0" prefWidth="198.0" text="Fixer une nouvelle période pour le planning" />
       <Button layoutX="697.0" layoutY="180.0" mnemonicParsing="false" onAction="#affichage" text="Affichage des taches" />
-      <VBox fx:id="boxAffichageTaches" layoutX="296.0" layoutY="15.0" prefHeight="562.0" prefWidth="306.0" style="-fx-border-radius: 25px;">
+      <VBox fx:id="boxAffichageTaches" layoutX="296.0" layoutY="15.0" prefHeight="562.0" prefWidth="350.0" style="-fx-border-radius: 25px;">
          <children>
             <ScrollPane fx:id="scrollAffichageTaches" prefHeight="563.0" prefWidth="306.0" style="-fx-border-radius: 25px;">
               <content>

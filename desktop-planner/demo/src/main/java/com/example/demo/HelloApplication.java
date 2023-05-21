@@ -24,6 +24,7 @@ public class HelloApplication extends Application{
         Scene loginScene = new Scene(loginGrid, 900, 600);
         loginScene.getStylesheets().add(getClass().getResource("/styles/login.css").toExternalForm());
         primaryStage.setScene(loginScene);
+        primaryStage.setResizable(false);
         primaryStage.show();
     }
 
