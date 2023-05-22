@@ -9,6 +9,7 @@ import javafx.scene.layout.VBox;
 import javafx.util.Pair;
 
 import java.io.Serializable;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
@@ -44,7 +45,24 @@ public class Jour implements Serializable, Comparable<Jour> {
         this.creneaux = creneaux;
     }
 
-// allouerTache()
+    public static Pair<Jour, Pair<Creneau, Integer>> rechercherCreneauLibre(User user, Duration duration, LocalDate deadline) {
+        for (Jour jour : user.getPlanning().getJours()) {
+            if (jour.getDateDuJour().isAfter(deadline)) {
+                break; // Stop searching if we reach the deadline
+            }
+            List<Creneau> creneaux = jour.getCreneaux();
+            for (int i = 0; i < creneaux.size(); i++) {
+                Creneau creneau = creneaux.get(i);
+                if (creneau.calculerDuree().compareTo(duration) >= 0) {
+                    return new Pair<>(jour, new Pair<>(creneau.substituteDuration(duration), i)); // Found a free time slot
+                }
+            }
+        }
+
+        return null; // No free time slot found
+    }
+
+
 
     public void incrementerJour(int numberOfDays) {
         LocalDate newDate = dateDuJour.plusDays(numberOfDays);
@@ -148,9 +166,10 @@ public class Jour implements Serializable, Comparable<Jour> {
         return date1.compareTo(date2);
     }
 
+
+
 }
 
-    // creneau rechercherLibre() hadi pour l'automatique, manuellement l'utilisateur c'est lui qui choisi
 
     // ajouter une tâche à un créneau libre de la journée
 

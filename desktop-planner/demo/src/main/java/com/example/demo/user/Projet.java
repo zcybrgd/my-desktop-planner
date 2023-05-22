@@ -52,8 +52,7 @@ public class Projet implements Serializable {
     public String getDescription() {
         return description;
     }
-    // modifierProjet() dans user : ajouter//supprimer tache;
-    // void etatAvancement()
+
     public void evaluerProjet(){
         ChoiceDialog<EtatTache> choiceDialog = new ChoiceDialog<>(EtatTache.notRealized, EtatTache.values());
         choiceDialog.setTitle("Evaluation de la tache");

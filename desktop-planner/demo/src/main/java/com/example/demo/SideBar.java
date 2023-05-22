@@ -111,6 +111,12 @@ public class SideBar  {
             primaryStage.setScene(loginScene);
             primaryStage.show();
         });
+        statItem.setOnAction(stats->{
+            showPage("stats.fxml");
+        });
+        historyItem.setOnAction(histo->{
+            showPage("historique.fxml");
+        });
     }
 
 
@@ -133,6 +139,14 @@ public class SideBar  {
             }
             if(fxmlFile.equals("projets.fxml")){
                 Projets controller = fxmlLoader.getController();
+                controller.setUser(utilisateur);
+            }
+            if(fxmlFile.equals("stats.fxml")){
+                Stats controller = fxmlLoader.getController();
+                controller.setUser(utilisateur);
+            }
+            if(fxmlFile.equals("historique.fxml")){
+                Historique controller = fxmlLoader.getController();
                 controller.setUser(utilisateur);
             }
         } catch (IOException e) {

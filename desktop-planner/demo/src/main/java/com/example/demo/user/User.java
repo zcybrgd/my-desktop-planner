@@ -3,7 +3,6 @@ package com.example.demo.user;
 
 import com.example.demo.Exceptions.DateAnterieure;
 import com.example.demo.HelloApplication;
-import com.example.demo.Projets;
 import com.example.demo.enumerations.Prio;
 import com.example.demo.planification.*;
 import javafx.collections.FXCollections;
@@ -24,6 +23,7 @@ import java.io.*;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -34,8 +34,8 @@ public class User implements Serializable {
     private String pseudo;
     private String mdp;
     private Planning planning;
-    private ArrayList<Planning> Historique;
-    private int minTaskPerDay; // le minimum des taches requis pour une journée
+    private List<Planning> Historique;
+    private int minTaskPerDay=4; // le minimum des taches requis pour une journée
 
     public void setMinTaskPerDay(int minTaskPerDay) {
         this.minTaskPerDay = minTaskPerDay;
@@ -47,6 +47,10 @@ public class User implements Serializable {
 
 
     private Duration minDureeCreneau=Duration.ofMinutes(30);;
+
+    public void setMinDureeCreneau(Duration minDureeCreneau) {
+        this.minDureeCreneau = minDureeCreneau;
+    }
 
     public User(String pseudo, String mdp){
         this.pseudo = pseudo;
@@ -127,7 +131,7 @@ public class User implements Serializable {
     }
 
     // pour fixer la période de ce planning
-    public void fixerPlanning(LocalDate dateDebut, LocalDate dateFin) throws DateAnterieure {
+    public Planning fixerPlanning(LocalDate dateDebut, LocalDate dateFin) throws DateAnterieure {
         LocalDate dateActuelle = LocalDate.now();
 
         // Vérifier que la date de début est supérieure ou égale à la date actuelle
@@ -139,10 +143,10 @@ public class User implements Serializable {
             throw new IllegalArgumentException("La date de fin ne peut pas être antérieure à la date de début.");
         }
         Planning nouveauPlanning = new Planning(dateDebut, dateFin);
-        setPlanning(nouveauPlanning);
+        return nouveauPlanning;
     }
 
-    public void introduireUneTache(Tache tache, String type, Pair<Creneau, Integer> creneauChoisi, Jour journeeChoisie, User user) {
+    public void introduireUneTacheManuelle(Tache tache, String type, Pair<Creneau, Integer> creneauChoisi, Jour journeeChoisie, User user, Pair<Boolean, Projet> projetAjout) {
         // Create the fields for entering task data
         final int[] periodicite = {0};
         final int[] nbrdeDecompo = {0};
@@ -264,7 +268,7 @@ public class User implements Serializable {
                     tacheSimple.setDeadline(deadline);
                     tacheSimple.setCategorie(selectedCategorie);
                     tacheSimple.setNbrJourDePeriodicite(periodicite[0]);
-                    tacheSimple.planifierTache(user);
+                    tacheSimple.planifierTache(user, projetAjout);
                 }
                 if (tache instanceof TacheDecomposable) {
                     TacheDecomposable tacheDecomposable = (TacheDecomposable) tache;
@@ -273,8 +277,142 @@ public class User implements Serializable {
                     tacheDecomposable.setPriorite(priorite);
                     tacheDecomposable.setCategorie(selectedCategorie);
                     tacheDecomposable.decomposer(nbrdeDecompo[0],user);
-                    tacheDecomposable.planifierTache(user);
+                    tacheDecomposable.planifierTache(user, projetAjout);
                 }
+            }
+        });
+    }
+    public void introduireUneTacheAuto(Tache tache, String type, User user, Pair<Boolean, Projet> projetAjout) {
+        // Create the fields for entering task data
+        final int[] periodicite = {0};
+        TextField nomTacheTextField = new TextField();
+        ComboBox<Prio> prioriteComboBox = new ComboBox<>();
+        prioriteComboBox.setItems(FXCollections.observableArrayList(Prio.values()));
+        DatePicker deadlineDatePicker = new DatePicker();
+        ComboBox<String> categorieComboBox = new ComboBox<>();
+        categorieComboBox.setItems(FXCollections.observableArrayList(Categorie.getCategoryNames()));
+        // If the task is a TacheSimple, add a field for the periodicity
+        VBox tacheSimpleVBox = new VBox();
+        if (type.equals("Simple")) {
+            TextField periodiciteTextField = new TextField();
+            periodiciteTextField.setTextFormatter(new TextFormatter<>(new IntegerStringConverter(), 0,
+                    change -> {
+                        String newText = change.getControlNewText();
+                        if (newText.matches("\\d*")) {
+                            try {
+                                int intValue = Integer.parseInt(newText);
+                                if (intValue > 0) {
+                                    return change;
+                                }
+                            } catch (NumberFormatException ignored) {
+                            }
+                        }
+                        return null;
+                    }));
+
+            // Listener to retrieve the periodicité value
+            periodiciteTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+                if (!newValue.isEmpty()) {
+                    periodicite[0] = Integer.parseInt(newValue);
+                    // Do something with the periodicité value
+                    System.out.println("Périodicité: " + periodicite[0]);
+                }
+            });
+            tacheSimpleVBox.getChildren().addAll(new Label("Périodicité :"), periodiciteTextField);
+        }
+
+
+        // Create the dialog box for entering the task
+        GridPane gridPane = new GridPane();
+        gridPane.setHgap(10);
+        gridPane.setVgap(10);
+        gridPane.addRow(0, new Label("Nom de la tâche :"), nomTacheTextField);
+        gridPane.addRow(1, new Label("Priorité :"), prioriteComboBox);
+        gridPane.addRow(2, new Label("Deadline :"), deadlineDatePicker);
+        gridPane.addRow(3, new Label("Catégorie :"), categorieComboBox);
+        gridPane.addRow(4, tacheSimpleVBox);
+
+        // Define the converter for displaying the priority in the drop-down list
+        prioriteComboBox.setConverter(new StringConverter<Prio>() {
+            @Override
+            public String toString(Prio prio) {
+                return prio != null ? prio.toString() : "";
+            }
+            @Override
+            public Prio fromString(String string) {
+                for (Prio prio : Prio.values()) {
+                    if (prio.toString().equals(string)) {
+                        return prio;
+                    }
+                }
+                return null;
+            }
+        });
+
+        // Display the dialog box and retrieve the entered values
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Nouvelle tâche");
+        alert.setHeaderText("Introduire une nouvelle tâche :");
+        alert.getDialogPane().setContent(gridPane);
+
+        // Wait for the user to close the dialog box and process the entered values
+        alert.showAndWait().ifPresent(result -> {
+            if (result == ButtonType.OK) {
+                // Retrieve the entered values
+                String nomTache = nomTacheTextField.getText();
+                Prio priorite = prioriteComboBox.getValue();
+                LocalDate deadline = deadlineDatePicker.getValue();
+                String categorie = categorieComboBox.getValue();
+                Categorie selectedCategorie;
+                if (deadline == null) {
+                    Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                    errorAlert.setTitle("Erreur");
+                    errorAlert.setHeaderText("Date limite non définie");
+                    errorAlert.setContentText("Veuillez sélectionner une date limite pour la tâche.");
+                    errorAlert.showAndWait();
+                }else if (deadline.isAfter(user.getPlanning().getDateFin())) {
+                    Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                    errorAlert.setTitle("Erreur");
+                    errorAlert.setHeaderText("Deadline Invalide");
+                    errorAlert.setContentText("La date limite sélectionnée est après la fin de la période de planification.");
+                    errorAlert.showAndWait();
+                } else {
+                    if(categorie==null){
+                        selectedCategorie = new Categorie("Other");
+                    }else{
+                        selectedCategorie = new Categorie(categorie);
+                    }
+                    if (tache instanceof TacheSimple) {
+                        TacheSimple tacheSimple = (TacheSimple) tache;
+                        tacheSimple.setNom(nomTache);
+                        tacheSimple.setPriorite(priorite);
+                        tacheSimple.setDeadline(deadline);
+                        tacheSimple.setCategorie(selectedCategorie);
+                        tacheSimple.setNbrJourDePeriodicite(periodicite[0]);
+                        Pair<Jour, Pair<Creneau, Integer>> planifier = Jour.rechercherCreneauLibre(user,tacheSimple.getDuree(), tacheSimple.getDeadline());
+                        if(planifier==null){
+                            user.getPlanning().getTachesUnscheduled().add(tacheSimple);
+                        }else{
+                            tacheSimple.setJournee(planifier.getKey());
+                            tacheSimple.setCreneauDeTache(planifier.getValue().getKey());
+                            System.out.println("la journée de cette tache auto: " + tacheSimple.getJournee().getDateDuJour());
+                            System.out.println("le creneau " + tacheSimple.getCreneauDeTache().getHeureDebut() + " - " + tacheSimple.getCreneauDeTache().getHeureFin());
+                            planifier.getValue().getKey().decomposer(planifier.getValue(), planifier.getKey().getCreneaux());
+                            tacheSimple.planifierTache(user, projetAjout);
+                        }
+                    }
+                    if (tache instanceof TacheDecomposable) {
+                        TacheDecomposable tacheDecomposable = (TacheDecomposable) tache;
+                        tacheDecomposable.setNom(nomTache);
+                        tacheDecomposable.setDeadline(deadline);
+                        tacheDecomposable.setPriorite(priorite);
+                        tacheDecomposable.setCategorie(selectedCategorie);
+                        // dans décomposer
+                        tacheDecomposable.decomposer(0,user);
+                        tacheDecomposable.planifierTache(user, projetAjout);
+                    }
+                }
+
             }
         });
     }
@@ -387,10 +525,10 @@ public class User implements Serializable {
             LocalDate startDate = startDatePicker.getValue();
             LocalDate endDate = endDatePicker.getValue();
             try {
-                Planning planning = new Planning(startDate, endDate);
+                Planning nvPlanning = user.fixerPlanning(startDate, endDate);
                 if(user.getPlanning()!=null){
                     if(user.getHistorique()!=null){
-                        ArrayList<Planning> historique = user.getHistorique();
+                        List<Planning> historique = user.getHistorique();
                         historique.add(planning);
                         user.setHistorique(historique);
                     }else{
@@ -399,8 +537,7 @@ public class User implements Serializable {
                         user.setHistorique(historique);
                     }
                 }
-                user.fixerPlanning(startDate, endDate);
-                user.setPlanning(planning);
+                this.setPlanning(nvPlanning);
                 user.getPlanning().definirCreneauxLibres(user);
             } catch (DateAnterieure e) {
                 // Afficher un message d'erreur
@@ -443,11 +580,11 @@ public class User implements Serializable {
         this.planning = planning;
     }
 
-    public ArrayList<Planning> getHistorique() {
+    public List<Planning> getHistorique() {
         return Historique;
     }
 
-    public void setHistorique(ArrayList<Planning> historique) {
+    public void setHistorique(List<Planning> historique) {
         Historique = historique;
     }
 }

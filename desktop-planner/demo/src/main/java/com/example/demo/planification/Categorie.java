@@ -20,25 +20,32 @@ public class Categorie implements Serializable {
 
     // initialisation des couleurs par défaut
     static {
-        couleursParDefaut.put("Studies", Color.BLUE);
-        couleursParDefaut.put("Work", Color.GREEN);
-        couleursParDefaut.put("Hobby", Color.PURPLE);
-        couleursParDefaut.put("Sport", Color.RED);
-        couleursParDefaut.put("Health", Color.ORANGE);
-        couleursParDefaut.put("Other", Color.GRAY);
+        couleursParDefaut.put("Studies", Color.rgb(47, 128, 237));
+        couleursParDefaut.put("Work", Color.rgb(33, 150, 83));
+        couleursParDefaut.put("Hobby", Color.rgb(155, 81, 224));
+        couleursParDefaut.put("Sport", Color.rgb(235, 87, 87));
+        couleursParDefaut.put("Health", Color.rgb(242, 153, 74));
+        couleursParDefaut.put("Other", Color.rgb(173, 178, 182));
     }
 
     // constructeur pour une catégorie existante avec une couleur par défaut
     public Categorie(String nom) {
         this.nom = nom;
         this.couleur = couleursParDefaut.getOrDefault(nom, Color.GRAY);
+        this.color = couleur.toString();
     }
 
     // constructeur pour une nouvelle catégorie avec une couleur personnalisée
-    public Categorie(String nom, Color couleur) {
-        this.nom = nom;
-        this.couleur = couleur;
+
+
+    public String getColor() {
+        return color;
     }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
     public Categorie(){}
 
     // getters et setters pour nom et couleur
@@ -51,6 +58,7 @@ public class Categorie implements Serializable {
     }
 
     public Color getCouleur() {
+
         return couleur;
     }
 

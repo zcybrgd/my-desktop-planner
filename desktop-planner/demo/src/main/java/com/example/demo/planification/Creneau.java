@@ -29,16 +29,17 @@ public class Creneau implements Decomposable, Serializable, Comparable<Creneau> 
     public boolean isEstLibre() {
         return estLibre;
     }
-    // decomposer() implements Décomposable
-    // comparerDuree()
+
+    public Creneau substituteDuration(Duration newDuration) {
+        LocalTime newHeureFin = HeureDebut.plus(newDuration);
+        return new Creneau(HeureDebut, newHeureFin);
+    }
 
     public Duration calculerDuree() {
         return Duration.between(HeureDebut, HeureFin);
     }
 
 
-
-    // si l'heure hadi elle est f l'intervalle du créneau
     public boolean comparerHeure(LocalTime heure) {
         return (heure.isAfter(HeureDebut) && heure.isBefore(HeureFin)) || heure.equals(HeureDebut) || heure.equals(HeureFin);
     }
@@ -47,8 +48,8 @@ public class Creneau implements Decomposable, Serializable, Comparable<Creneau> 
         LocalTime heure;
         LocalTime heureFin;
         if(creneau == null || creneau.isEmpty()){
-            heure = LocalTime.of(6, 0); // il commence sa journée à 6:00 AM
-            heureFin = LocalTime.of(22, 0); // il la termine 10:00 PM
+            heure = LocalTime.of(4, 30); // il commence sa journée à 5 AM
+            heureFin = LocalTime.of(23, 30); // il la termine 11 PM
         }else{
             heure = creneau.get().getHeureDebut();
             heureFin = creneau.get().getHeureFin().plus(minDureeCreneau);

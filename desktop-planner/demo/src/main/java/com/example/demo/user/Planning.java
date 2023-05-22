@@ -1,6 +1,7 @@
 package com.example.demo.user;
 
 import com.example.demo.Exceptions.PasDePlanning;
+import com.example.demo.enumerations.EtatTache;
 import com.example.demo.planification.Creneau;
 import com.example.demo.planification.Tache;
 import com.example.demo.planification.TacheDecomposable;
@@ -23,12 +24,63 @@ import java.util.*;
 public class Planning implements Serializable {
     private List<Jour> jours = new ArrayList<Jour>();
     private Set<TacheSimple> tachesaPlanifier = new TreeSet<>();
+    private Set<Tache> tachesUnscheduled = new TreeSet<>();
     private LocalDate dateDebut;
     private LocalDate dateFin;
     private Pair<LocalDate, LocalDate> periode;
+    private int encouragement=0;
 
-    private int[] encouragement;
-    private ArrayList<Badge> Badges ;// nbr de badges gagnés
+    private List<Badge> lesBadges = new ArrayList<>();
+
+
+    public void incrementEncouragement(Map<LocalDate, Integer> tachesRealiseesDansLaJournee) {
+        LocalDate today = LocalDate.now();
+        int consecutiveDays = tachesRealiseesDansLaJournee.getOrDefault(today, 0);
+        consecutiveDays++;
+        tachesRealiseesDansLaJournee.put(today, consecutiveDays);
+        encouragement++;
+        checkConsecutiveEncouragement();
+    }
+
+    public void resetEncouragement(Map<LocalDate, Integer> tachesRealiseesDansLaJournee) {
+        LocalDate today = LocalDate.now();
+        tachesRealiseesDansLaJournee.remove(today);
+        encouragement = 0;
+    }
+
+
+    private void checkConsecutiveEncouragement() {
+        if (encouragement >= 2) { // 5
+            Badge badge = new Badge("Good");
+            addBadge(badge);
+        }
+        // Check if the "Good" badge has been obtained three times
+        int goodBadgeCount = countBadgeOccurrences("Good");
+        if (goodBadgeCount >= 2) { // 3
+            Badge veryGoodBadge = new Badge("VeryGood");
+            addBadge(veryGoodBadge);
+        }
+
+        // Check if the "VeryGood" badge has been obtained three times
+        int veryGoodBadgeCount = countBadgeOccurrences("VeryGood");
+        if (veryGoodBadgeCount >= 2) { // 2
+            Badge excellentBadge = new Badge("Excellent");
+            addBadge(excellentBadge);
+        }
+    }
+    private int countBadgeOccurrences(String badgeName) {
+        int count = 0;
+        for (Badge badge : lesBadges) {
+            if (badge.getBadgeLabel().equals(badgeName)) {
+                count++;
+            }
+        }
+        return count;
+    }
+    public void addBadge(Badge badge) {
+        lesBadges.add(badge);
+    }
+    private List<Badge> Badges ;// nbr de badges gagnés
     private ArrayList<Projet> userProjects = new ArrayList<>();
 
     public ArrayList<Projet> getUserProjects() {
@@ -39,21 +91,14 @@ public class Planning implements Serializable {
         this.userProjects = userProjects;
     }
 
-    public void setBadges(ArrayList<Badge> badges) {
+    public void setBadges(List<Badge> badges) {
         Badges = badges;
     }
 
-    public ArrayList<Badge> getBadges() {
+    public List<Badge> getBadges() {
         return Badges;
     }
 
-    public int[] getEncouragement() {
-        return encouragement;
-    }
-
-    public void setEncouragement(int[] encouragement) {
-        this.encouragement = encouragement;
-    }
 
     public Set<TacheSimple> getTachesaPlanifier() {
         return tachesaPlanifier;
@@ -90,12 +135,21 @@ public class Planning implements Serializable {
 
     // LocalDate rentabilité() // le jour ou il était le plus rentable
     // replanifier() // replanifier les taches
-    // modifierPeriode() // la période du planning
-    // ajouter une tâche à une journée spécifique
-    //
 
     public Pair<LocalDate, LocalDate> getPeriode() {
         return new Pair<>(getDateDebut(), getDateFin());
+    }
+
+    public void updateTachesRealiseesDansLaJournee(Map<LocalDate, Integer> tachesRealiseesDansLaJournee,LocalDate jourCourant) {
+        int count=0;
+        for (TacheSimple tache : tachesaPlanifier) {
+            if (tache.getJournees().contains(new Jour(jourCourant)) && tache.getStateDeTache() == EtatTache.completed) {
+                count++;
+            }
+        }
+
+        tachesRealiseesDansLaJournee.put(jourCourant, count);
+        System.out.println("Nombre de tâches réalisées dans la journée " + jourCourant + " : " + count);
     }
 
     public LocalDate choisirDateDansPeriode() {
@@ -139,7 +193,9 @@ public class Planning implements Serializable {
         return datePicker.getValue();
     }
 
-
+    public Set<Tache> getTachesUnscheduled() {
+        return tachesUnscheduled;
+    }
 
     public void setJours(Pair<LocalDate, LocalDate> periode) {
         LocalDate startDate = periode.getKey();
@@ -156,6 +212,10 @@ public class Planning implements Serializable {
            System.out.println(j.getDateDuJour().toString());
        }
         this.jours = jours;
+    }
+
+    public List<Jour> getJours() {
+        return jours;
     }
 
     public void definirCreneauxLibres(User user) {
@@ -261,7 +321,7 @@ public class Planning implements Serializable {
         }
     }
 
-    public static void planifier(User user){
+    public static void planifier(User user, Pair<Boolean, Projet> projetAjout){
         // Afficher une boîte de dialogue avec deux options de planification
         List<String> choixPlanification = new ArrayList<>();
         choixPlanification.add("Planification manuelle");
@@ -296,7 +356,7 @@ public class Planning implements Serializable {
                                 Duration dureeDeTache = creneauChoisi.getKey().calculerDuree();
                                 System.out.println("On va planifier une tache simple");
                                 TacheSimple tacheaIntroduire = new TacheSimple(dureeDeTache, creneauChoisi.getKey(), journeeChoisie);
-                                user.introduireUneTache(tacheaIntroduire, "Simple", creneauChoisi, journeeChoisie,user);
+                                user.introduireUneTacheManuelle(tacheaIntroduire, "Simple", creneauChoisi, journeeChoisie,user, projetAjout);
                             } else {
                                 System.out.println("Pas de créneau à décomposer");
                             }
@@ -335,7 +395,7 @@ public class Planning implements Serializable {
                                 Duration duration = Duration.ofMinutes(Long.parseLong(durationString));
                                 TacheDecomposable tacheaIntroduire = new TacheDecomposable(duration);
                                 System.out.println("duration : " + duration);
-                                user.introduireUneTache(tacheaIntroduire, "Decomposable", null, null,user);
+                                user.introduireUneTacheManuelle(tacheaIntroduire, "Decomposable", null, null,user, projetAjout);
                             } catch (NumberFormatException ex) {
                                 // Handle invalid input format
                                 Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -371,6 +431,114 @@ public class Planning implements Serializable {
                 System.out.println("Planification manuelle choisie");
 
             } else if (selected.equals("Planification automatique")) {
+                Stage stage = new Stage();
+                stage.setTitle("Le type de la tache que vous voulez que le système planifie: ");
+                Button simpleBtn = new Button("Simple");
+                Button decomposableBtn = new Button("Decomposable");
+                simpleBtn.setOnAction(e -> {
+                    try{
+                        if(user.getPlanning()!=null){
+                            System.out.println("user : " + user.getPseudo()+ "planning: " + user.getPlanning().getPeriode());
+                        }
+                        if(user.getPlanning()==null) throw new PasDePlanning("Vous n'avez initialiser aucun Planning");
+                        e.consume();
+                        TextInputDialog dialogD = new TextInputDialog();
+                        dialogD.setTitle("Entrer la Durée ");
+                        dialogD.setHeaderText(null);
+                        dialogD.setContentText("Entrer la durée provisoire pour cette tache décomposée:");
+
+                        // Show the dialog and wait for the user's input
+                        Optional<String> resultD = dialogD.showAndWait();
+
+                        // Process the user's input
+                        resultD.ifPresent(durationString -> {
+                            try {
+                                Duration duration = Duration.ofMinutes(Long.parseLong(durationString));
+                                if (duration.compareTo(user.getMinDureeCreneau()) < 0) {
+                                    // La durée est inférieure à la durée minimale requise
+                                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                                    alert.setTitle("Erreur");
+                                    alert.setHeaderText("Durée invalide");
+                                    alert.setContentText("La durée doit être supérieure ou égale à " + user.getMinDureeCreneau().toMinutes() + " minutes");
+                                    alert.showAndWait();
+                                } else {
+                                    TacheSimple tacheaIntroduire = new TacheSimple(duration);
+                                    System.out.println("duration : " + duration);
+                                    user.introduireUneTacheAuto(tacheaIntroduire, "Simple", user, projetAjout);
+                                }
+                            } catch (NumberFormatException ex) {
+                                // Handle invalid input format
+                                Alert alert = new Alert(Alert.AlertType.ERROR);
+                                alert.setTitle("Erreur");
+                                alert.setHeaderText("Durée invalide");
+                                alert.setContentText("La durée doit être un nombre entier de minutes");
+                                alert.showAndWait();
+                            }
+                        });
+
+                    }catch(PasDePlanning ex){
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Erreur");
+                        alert.setHeaderText("Y a aucun Planning courant dans votre Application!, veuillez initialiser un planning");
+                        alert.setContentText("Veuillez choisissez une période pour votre planning");
+                        alert.showAndWait();
+                    }
+                });
+
+                decomposableBtn.setOnAction(e -> {
+                    // code to handle the decomposable task goes here
+                    try{
+                        if(user.getPlanning()!=null){
+                            System.out.println("user : " + user.getPseudo()+ "planning: " + user.getPlanning().getPeriode());
+                        }
+                        if(user.getPlanning()==null) throw new PasDePlanning("Vous n'avez initialiser aucun Planning");
+                        // Create a dialog box for entering the duration
+                        TextInputDialog dialogD = new TextInputDialog();
+                        dialogD.setTitle("Entrer la Durée ");
+                        dialogD.setHeaderText(null);
+                        dialogD.setContentText("Entrer la durée provisoire pour cette tache décomposée:");
+
+                        // Show the dialog and wait for the user's input
+                        Optional<String> resultD = dialogD.showAndWait();
+
+                        // Process the user's input
+                        resultD.ifPresent(durationString -> {
+                            try {
+                                Duration duration = Duration.ofMinutes(Long.parseLong(durationString));
+                                TacheDecomposable tacheaIntroduire = new TacheDecomposable(duration);
+                                System.out.println("duration : " + duration);
+                                user.introduireUneTacheManuelle(tacheaIntroduire, "Decomposable", null, null,user, projetAjout);
+                            } catch (NumberFormatException ex) {
+                                // Handle invalid input format
+                                Alert alert = new Alert(Alert.AlertType.ERROR);
+                                alert.setTitle("Erreur");
+                                alert.setHeaderText("Durée invalide");
+                                alert.setContentText("La durée doit être un nombre entier de minutes");
+                                alert.showAndWait();
+                            }
+                        });
+
+                    }catch(PasDePlanning ex){
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Erreur");
+                        alert.setHeaderText("Y a aucun Planning courant dans votre Application!, veuillez initialiser un planning");
+                        alert.setContentText("Veuillez choisissez une période pour votre planning");
+                        alert.showAndWait();
+                    }
+                });
+
+                stage.setOnCloseRequest(e -> {
+                    System.out.println("closed without choosing");
+                });
+
+                HBox buttonsBox = new HBox(simpleBtn, decomposableBtn);
+                buttonsBox.setSpacing(10);
+                Scene scene = new Scene(buttonsBox, 300, 100);
+                stage.setScene(scene);
+                stage.showAndWait();
+                stage.setOnCloseRequest(close->{
+                    System.out.println("pas de créneau choisi");
+                });
                 // Code pour la planification automatique
                 System.out.println("Planification automatique choisie");
             }

@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import com.example.demo.planification.Tache;
+import com.example.demo.planification.TacheSimple;
 import com.example.demo.user.Planning;
 import com.example.demo.user.Projet;
 import com.example.demo.user.User;
@@ -14,6 +15,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 
 import java.util.Optional;
 
@@ -98,7 +100,7 @@ public class Projets {
             if(user.getPlanning().getUserProjects()!=null && user.getPlanning().getUserProjects().size()>0){
                 numberOfProjects = user.getPlanning().getUserProjects().size();
                 // Update the label text
-                cptProjets.setText("Vous avez  " + numberOfProjects + "  projets pour le moment");
+                cptProjets.setText("Vous avez " + numberOfProjects + " projets pour le moment");
             }
         }catch(NullPointerException e){System.out.println(e.getMessage());}
     }
@@ -152,11 +154,17 @@ public class Projets {
     void AfficherProjet(Projet projet){
         Stage taskStage = new Stage();
         VBox taskBox = new VBox(10);
+        taskBox.setStyle("-fx-background-color: white;");
         taskBox.setPadding(new Insets(10));
 
         // Create buttons for each task in the project
         for (Tache task : projet.getEnsembleDesTaches()) {
             Button taskButton = new Button(task.getNom());
+            taskButton.setStyle("-fx-font-size: 16px; -fx-background-color: white; -fx-background-radius: 25px; -fx-border-color: white; -fx-border-radius: 25;");
+            taskButton.setOnAction(clickedOnTask->{
+                if(task instanceof TacheSimple tacheSimple)
+                lesActionsSurLesTaches(tacheSimple);
+            });
             // Create labels for deadline, duration, and state
             Label deadlineLabel = new Label("Deadline: " + task.getDeadline());
             Label durationLabel = new Label("Duration: " + task.getDuree());
@@ -165,11 +173,11 @@ public class Projets {
             // Create an HBox to hold the labels
             HBox taskDetailsBox = new HBox(10);
             taskDetailsBox.getChildren().addAll(deadlineLabel, durationLabel, stateLabel);
-
+            taskDetailsBox.setAlignment(Pos.CENTER);
             // Create a VBox to hold the task button and details
             VBox taskItemBox = new VBox(5);
             taskItemBox.getChildren().addAll(taskButton, taskDetailsBox);
-
+            taskItemBox.setAlignment(Pos.CENTER);
             taskBox.getChildren().add(taskItemBox);
         }
 
@@ -177,16 +185,26 @@ public class Projets {
         Button evaluateButton = new Button("Evaluer Projet");
         Button modifyButton = new Button("Modifier Projet");
         Button addButton = new Button("Ajouter une Tache à ce projet");
-        evaluateButton.setOnAction(evaluer->{
+
+        // Set the preferred width of the buttons
+        evaluateButton.setMinWidth(150);
+        evaluateButton.setMaxWidth(200);
+        modifyButton.setMinWidth(150);
+        modifyButton.setMaxWidth(200);
+        addButton.setMinWidth(150);
+        addButton.setMaxWidth(200);
+
+        evaluateButton.setOnAction(evaluer -> {
             projet.evaluerProjet();
             AffichageProjects();
         });
-        modifyButton.setOnAction(modifier->{
+        modifyButton.setOnAction(modifier -> {
             user.modifierProjet(projet);
             AffichageProjects();
         });
-        addButton.setOnAction(ajouter->{
-            Planning.planifier(user);
+        addButton.setOnAction(ajouter -> {
+            Pair<Boolean, Projet> projetAjout = new Pair<>(true, projet);
+            Planning.planifier(user, projetAjout);
         });
         // Create an HBox to hold the three buttons
         HBox buttonBox = new HBox(10);
@@ -197,11 +215,53 @@ public class Projets {
         VBox rootBox = new VBox(10);
         rootBox.getChildren().addAll(taskBox, buttonBox);
         rootBox.setPadding(new Insets(10));
+        rootBox.setStyle("-fx-background-color: white;");
+        // Create a ScrollPane and set it as the content of the rootBox
+        ScrollPane scrollPane = new ScrollPane(rootBox);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setPrefHeight(400);
 
         // Create a scene and set it as the content of the stage
-        Scene scene = new Scene(rootBox);
+        Scene scene = new Scene(scrollPane);
+        scene.setFill(Color.WHITE);
         taskStage.setScene(scene);
+        // Set the preferred width of the stage
+        taskStage.setWidth(800);
         taskStage.show();
+
     }
+
+    void lesActionsSurLesTaches(TacheSimple tacheSimple){
+        System.out.println("clicked on this task : " + tacheSimple.getNom());
+        // Create the dialog window
+        Dialog<String> dialog = new Dialog<>();
+        dialog.setTitle("Task Options");
+        dialog.setHeaderText("Choisissez une option pour modifier la tache");
+
+        // Set the dialog buttons
+        ButtonType evaluerButton = new ButtonType("Evaluer Tache", ButtonBar.ButtonData.OK_DONE);
+        ButtonType renommerButton = new ButtonType("Renommer Tache", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(evaluerButton, renommerButton, ButtonType.CANCEL);
+
+        // Create the content for the dialog
+        VBox dialogContent = new VBox();
+        dialogContent.setSpacing(10);
+
+        // Handle Evaluer Tache button
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == evaluerButton) {
+                tacheSimple.evaluerTache(user);
+            } else if (dialogButton == renommerButton) {
+                tacheSimple.changerNom(user);
+            }
+            // Return null for cancel button or if no option was selected
+            return null;
+        });
+
+        // Show the dialog window
+        dialog.showAndWait();
+    }
+
+
 
 }

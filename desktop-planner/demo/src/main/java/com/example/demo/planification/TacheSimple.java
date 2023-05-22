@@ -3,9 +3,11 @@ package com.example.demo.planification;
 import com.example.demo.enumerations.EtatTache;
 import com.example.demo.enumerations.Prio;
 import com.example.demo.user.Jour;
+import com.example.demo.user.Projet;
 import com.example.demo.user.User;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.TextInputDialog;
+import javafx.util.Pair;
 
 
 import java.io.Serializable;
@@ -14,7 +16,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 import java.util.Set;
 
-public class TacheSimple extends Tache implements Serializable, Comparable<TacheSimple>, Cloneable {
+public class TacheSimple extends Tache implements Serializable, Comparable<TacheSimple> {
 
     public TacheSimple() {
         // Default constructor required for deserialization
@@ -87,6 +89,9 @@ public class TacheSimple extends Tache implements Serializable, Comparable<Tache
         this.journee = journee;
         super.getJournees().add(journee);
     }
+    public TacheSimple(Duration duree){
+        super(duree);
+    }
 
     public void setJournee(Jour journee) {
         this.journee = journee;
@@ -97,21 +102,24 @@ public class TacheSimple extends Tache implements Serializable, Comparable<Tache
     }
 
     // dans un seul créneau
-    public void planifierTache(User user){
+    public void planifierTache(User user, Pair<Boolean, Projet> projetAjout){
         user.getPlanning().getTachesaPlanifier().add(this);
+        if(projetAjout.getKey()){
+            projetAjout.getValue().getEnsembleDesTaches().add(this);
+        }
         if(nbrJourDePeriodicite>0){
             Jour jour = new Jour(this.journee.getDateDuJour());
             while(jour.comparerDates(jour.getDateDuJour(),user.getPlanning().getDateFin())<=0){
-                try{
                     System.out.println("Jour de périodicité: " + jour.getDateDuJour().toString());
-                    TacheSimple tachePeriodique = (TacheSimple) this.clone();
+                    TacheSimple tachePeriodique = (TacheSimple) this;
                     tachePeriodique.setJournee(jour);
                     System.out.println("nom tache périodique: " + tachePeriodique.getNom());
                     System.out.println("date tache périodique: " + tachePeriodique.getJournee().getDateDuJour());
                     user.getPlanning().getTachesaPlanifier().add(tachePeriodique);
-                }catch(CloneNotSupportedException e){
-                    System.out.println("not cloneable");
-                }
+                    if(projetAjout.getKey()){
+                        projetAjout.getValue().getEnsembleDesTaches().add(tachePeriodique);
+                    }
+
                 jour.incrementerJour(nbrJourDePeriodicite);
             }
         }

@@ -6,9 +6,13 @@ package com.example.demo;
 import com.example.demo.enumerations.EtatTache;
 import com.example.demo.planification.Categorie;
 import com.example.demo.planification.Creneau;
+import com.example.demo.planification.Tache;
 import com.example.demo.planification.TacheSimple;
+import com.example.demo.user.Badge;
 import com.example.demo.user.Planning;
+import com.example.demo.user.Projet;
 import com.example.demo.user.User;
+import javafx.animation.PauseTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -21,8 +25,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.util.Duration;
+import javafx.util.Pair;
 
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.*;
 
 
@@ -30,6 +39,7 @@ public class Calendrier {
 
     private User user;
 
+    private Map<LocalDate, Integer> tachesRealiseesDansLaJournee = new HashMap<>();
 
     public void setUser(User user) {
         this.user = user;
@@ -41,10 +51,53 @@ public class Calendrier {
 
     @FXML
     void planification(ActionEvent event) {
-           Planning.planifier(user);
+           Pair<Boolean, Projet> projetAjout= new Pair<>(false, null);
+           Planning.planifier(user, projetAjout);
            AfficherTasks();
     }
 
+    void modifierNbrTachesDeLaJournee(){
+        //LocalDate.now()
+        user.getPlanning().updateTachesRealiseesDansLaJournee(tachesRealiseesDansLaJournee,LocalDate.now());
+        if(tachesRealiseesDansLaJournee.containsKey(LocalDate.now()) &&
+                tachesRealiseesDansLaJournee.get(LocalDate.now()) == user.getMinTaskPerDay()){
+            Label messageLabel = new Label("Félicitations ! Vous avez atteint le nombre minimal de tâches par jour.");
+            messageLabel.setStyle("-fx-font-family: Arial; -fx-font-size: 24px; -fx-text-fill: black;");
+            VBox root = new VBox(messageLabel);
+            root.setAlignment(Pos.CENTER);
+            root.setStyle("-fx-background-color: #F5F5F5; -fx-padding: 20px;");
+            Scene scene = new Scene(root, 850, 200);
+            Stage stage = new Stage();
+            scene.setFill(Color.WHITE);
+            stage.setScene(scene);
+            stage.setTitle("Message d'encouragement");
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.show();
+            int closeDelaySeconds = 4;
+            // Create a PauseTransition to delay the stage close
+            PauseTransition delay = new PauseTransition(Duration.seconds(closeDelaySeconds));
+            delay.setOnFinished(event -> stage.close());
+            // Start the delay
+            delay.play();
+            // gérer les encouragements;
+            gererLesEncouragements();
+            System.out.println("--- Afficher les Badges ---");
+            try{
+                for(Badge badge : user.getPlanning().getBadges()){
+                    System.out.println("Badge: " + badge.getBadgeLabel());
+                }
+            }catch(NullPointerException e){e.getMessage();}
+        }
+    }
+    void gererLesEncouragements(){
+
+        int count = tachesRealiseesDansLaJournee.getOrDefault(LocalDate.now(), 0);
+        if (count >= user.getMinTaskPerDay()) {
+            user.getPlanning().incrementEncouragement(tachesRealiseesDansLaJournee);
+        } else {
+            user.getPlanning().resetEncouragement(tachesRealiseesDansLaJournee);
+        }
+    }
     @FXML
     void affichage(ActionEvent event) {
         AfficherTasks();
@@ -64,11 +117,10 @@ public class Calendrier {
             scrollPane.setFitToWidth(true);
             scrollPane.setStyle("-fx-background-color: transparent;"); // Make the background transparent
             // Sort the tasks by date
-            List<TacheSimple> sortedTasks = new ArrayList<>(tacheSimpleSet);
-            sortedTasks.sort(Comparator.comparing(t -> t.getJournee().getDateDuJour()));
+
             // Iterate over the sorted tasks and create buttons
             String currentDate = null;
-            for (TacheSimple tacheSimple : sortedTasks) {
+            for (TacheSimple tacheSimple : tacheSimpleSet) {
                 String taskDate = tacheSimple.getJournee().getDateDuJour().toString();
                 // Add a separator between tasks of different dates
                 if (!taskDate.equals(currentDate)) {
@@ -79,39 +131,10 @@ public class Calendrier {
                 }
                 // Create a button for the task
                 Button taskButton = new Button(tacheSimple.getNom());
-                taskButton.setStyle("-fx-font-size: 16px; -fx-background-color: white; -fx-border-color: #FF4081; -fx-border-radius: 5;");
+                taskButton.setStyle("-fx-font-size: 16px; -fx-background-color: white; -fx-background-radius: 25px; -fx-border-color: white; -fx-border-radius: 25;");
                 taskButton.setPrefWidth(200);
                 taskButton.setOnAction(clickedOnTask->{
-                    System.out.println("clicked on this task : " + tacheSimple.getNom());
-                    // Create the dialog window
-                    Dialog<String> dialog = new Dialog<>();
-                    dialog.setTitle("Task Options");
-                    dialog.setHeaderText("Choisissez une option pour modifier la tache");
-
-                    // Set the dialog buttons
-                    ButtonType evaluerButton = new ButtonType("Evaluer Tache", ButtonBar.ButtonData.OK_DONE);
-                    ButtonType renommerButton = new ButtonType("Renommer Tache", ButtonBar.ButtonData.OK_DONE);
-                    dialog.getDialogPane().getButtonTypes().addAll(evaluerButton, renommerButton, ButtonType.CANCEL);
-
-                    // Create the content for the dialog
-                    VBox dialogContent = new VBox();
-                    dialogContent.setSpacing(10);
-
-                    // Handle Evaluer Tache button
-                    dialog.setResultConverter(dialogButton -> {
-                        if (dialogButton == evaluerButton) {
-                            tacheSimple.evaluerTache(user);
-                            AfficherTasks();
-                        } else if (dialogButton == renommerButton) {
-                            tacheSimple.changerNom(user);
-                            AfficherTasks();
-                        }
-                        // Return null for cancel button or if no option was selected
-                        return null;
-                    });
-
-                    // Show the dialog window
-                    dialog.showAndWait();
+                   lesActionsSurLesTaches(tacheSimple);
                 });
                 // Create a label for the task priority
                 Label priorityLabel = new Label(tacheSimple.getPriorite().toString());
@@ -130,8 +153,9 @@ public class Calendrier {
                 Circle categoryCircle = new Circle(8);
                 categoryCircle.setStyle("-fx-stroke: black;");
                 Categorie category = tacheSimple.getCategorie();
-                if (category != null && category.getCouleur() != null) {
-                    Color categoryColor = category.getCouleur();
+                if (category != null) {
+                    String color = category.getColor();
+                    Color categoryColor = Color.web(color);
                     String categoryColorHex = String.format("#%02x%02x%02x", (int)(categoryColor.getRed() * 255),
                             (int)(categoryColor.getGreen() * 255), (int)(categoryColor.getBlue() * 255));
                     categoryCircle.setStyle("-fx-fill: " + categoryColorHex + ";");
@@ -203,5 +227,63 @@ public class Calendrier {
         return previousScene;
     }
 
+    void lesActionsSurLesTaches(TacheSimple tacheSimple){
+        System.out.println("clicked on this task : " + tacheSimple.getNom());
+        // Create the dialog window
+        Dialog<String> dialog = new Dialog<>();
+        dialog.setTitle("Task Options");
+        dialog.setHeaderText("Choisissez une option pour modifier la tache");
 
+        // Set the dialog buttons
+        ButtonType evaluerButton = new ButtonType("Evaluer Tache", ButtonBar.ButtonData.OK_DONE);
+        ButtonType renommerButton = new ButtonType("Renommer Tache", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(evaluerButton, renommerButton, ButtonType.CANCEL);
+
+        // Create the content for the dialog
+        VBox dialogContent = new VBox();
+        dialogContent.setSpacing(10);
+
+        // Handle Evaluer Tache button
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == evaluerButton) {
+                tacheSimple.evaluerTache(user);
+                AfficherTasks();
+                modifierNbrTachesDeLaJournee();
+            } else if (dialogButton == renommerButton) {
+                tacheSimple.changerNom(user);
+                AfficherTasks();
+            }
+            // Return null for cancel button or if no option was selected
+            return null;
+        });
+
+        // Show the dialog window
+        dialog.showAndWait();
+    }
+
+    @FXML
+    void affichageUnscheduled(ActionEvent event) {
+        Set<Tache> unscheduledTasks = user.getPlanning().getTachesUnscheduled();
+
+        if (unscheduledTasks.isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Information");
+            alert.setHeaderText("Aucune tâche non planifiée");
+            alert.setContentText("Il n'y a aucune tâche non planifiée pour le moment.");
+            alert.showAndWait();
+        } else {
+            StringBuilder contentText = new StringBuilder();
+            for (Tache task : unscheduledTasks) {
+                contentText.append("Nom : ").append(task.getNom()).append("\n");
+                contentText.append("Deadline : ").append(task.getDeadline()).append("\n\n");
+            }
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Information");
+            alert.setHeaderText("Tâches non planifiées");
+            alert.setContentText(contentText.toString());
+            alert.showAndWait();
+        }
+
+    }
 }

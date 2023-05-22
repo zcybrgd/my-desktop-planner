@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.Stats">
+   <children>
+      <Label fx:id="Excellent" layoutX="468.0" layoutY="43.0" text="0 Badges Excellent">
+         <font>
+            <Font size="25.0" />
+         </font>
+      </Label>
+      <Label fx:id="VGood" layoutX="468.0" layoutY="145.0" prefHeight="36.0" prefWidth="222.0" text="0 Badges VeryGood">
+         <font>
+            <Font size="25.0" />
+         </font>
+      </Label>
+      <Label fx:id="Good" layoutX="468.0" layoutY="245.0" prefHeight="36.0" prefWidth="174.0" text="0 Badges Good">
+         <font>
+            <Font size="25.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>
