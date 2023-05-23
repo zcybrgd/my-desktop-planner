@@ -5,6 +5,7 @@ import com.example.demo.user.Badge;
 import com.example.demo.user.User;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -15,8 +16,10 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.net.URL;
+import java.util.ResourceBundle;
 
-public class SideBar  {
+public class SideBar {
 
     private User utilisateur;
 
@@ -85,7 +88,6 @@ public class SideBar  {
         return utilisateur;
     }
 
-
     public void setUserNameLabel(String name) {
         System.out.println("the name that reached : " + name);
         this.userNameLabel.setText(name);
@@ -114,9 +116,6 @@ public class SideBar  {
         });
         statItem.setOnAction(stats->{
             showPage("stats.fxml");
-            for (Badge badge : utilisateur.getPlanning().getBadges()) {
-                System.out.println("on est dans la boucle sidebar pour afficher les badges: " + badge.getBadgeLabel());
-            }
         });
         historyItem.setOnAction(histo->{
             showPage("historique.fxml");

@@ -78,6 +78,7 @@ public class Calendrier {
             stage.setTitle("Message d'encouragement");
             stage.initStyle(StageStyle.TRANSPARENT);
             stage.show();
+            gererLesEncouragements();
             int closeDelaySeconds = 4;
             // Create a PauseTransition to delay the stage close
             PauseTransition delay = new PauseTransition(Duration.seconds(closeDelaySeconds));
@@ -96,6 +97,47 @@ public class Calendrier {
     void affichage(ActionEvent event) {
         AfficherTasks();
     }
+    void gererLesEncouragements() {
+        List<Jour> jours = user.getPlanning().getJours();
+        int consecutiveDays = 0; // Compteur de jours consécutifs avec 1 encouragement
+
+        List<Badge> pendingBadges = new ArrayList<>(); // List to collect badges that need to be added
+
+        for (Jour jour : jours) {
+            if (jour.getEncouragement() == 1) {
+                consecutiveDays++;
+                if (consecutiveDays == 2) { // 5
+                    Badge badgeGood = new Badge("Good");
+                    pendingBadges.add(badgeGood);
+                }
+            } else {
+                consecutiveDays = 0;
+            }
+        }
+
+        int goodBadgeCount = 0; // Compteur de badges "Good" obtenus
+        if (user.getPlanning().getBadges() == null) {
+            user.getPlanning().setBadges(new ArrayList<>());
+        }
+        for (Badge badge : user.getPlanning().getBadges()) {
+            if (badge.getBadgeLabel().equals("Good")) {
+                goodBadgeCount++;
+                if (goodBadgeCount == 2) { // 3
+                    Badge badgeVGood = new Badge("VeryGood");
+                    pendingBadges.add(badgeVGood);
+                } else if (goodBadgeCount == 4) { // 6
+                    Badge badgeE = new Badge("Excellent");
+                    pendingBadges.add(badgeE);
+                }
+            }
+        }
+
+        // Add the pending badges to the user's planning badges list
+        user.getPlanning().getBadges().addAll(pendingBadges);
+    }
+
+
+
     void AfficherTasks(){
         if(user.getPlanning()!=null){
             Set<TacheSimple> tacheSimpleSet = user.getPlanning().getTachesaPlanifier();
@@ -225,7 +267,8 @@ public class Calendrier {
         // Set the dialog buttons
         ButtonType evaluerButton = new ButtonType("Evaluer Tache", ButtonBar.ButtonData.OK_DONE);
         ButtonType renommerButton = new ButtonType("Renommer Tache", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(evaluerButton, renommerButton, ButtonType.CANCEL);
+        ButtonType replanifierButton = new ButtonType("Replanifier Tache", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(evaluerButton, renommerButton,replanifierButton, ButtonType.CANCEL);
 
         // Create the content for the dialog
         VBox dialogContent = new VBox();
@@ -239,6 +282,9 @@ public class Calendrier {
                 modifierNbrTachesDeLaJournee(tacheSimple);
             } else if (dialogButton == renommerButton) {
                 tacheSimple.changerNom(user);
+                AfficherTasks();
+            } else if (dialogButton == replanifierButton){
+                tacheSimple.replanifierTache(user);
                 AfficherTasks();
             }
             // Return null for cancel button or if no option was selected

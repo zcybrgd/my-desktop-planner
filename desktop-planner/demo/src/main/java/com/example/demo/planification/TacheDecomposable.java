@@ -36,7 +36,7 @@ public class TacheDecomposable extends Tache implements Decomposable, Serializab
             }
         }
     }
-    public void replanifierTache(){
+    public void replanifierTache(User user){
 
     }
     public void evaluerTache(User user){

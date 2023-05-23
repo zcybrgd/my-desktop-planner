@@ -108,24 +108,27 @@ public class TacheSimple extends Tache implements Serializable, Comparable<Tache
         }
 
         if(nbrJourDePeriodicite>0){
-            Jour jour = new Jour(this.journee.getDateDuJour());
+            Jour jour = user.getPlanning().chercherJourDansPeriode(this.journee.getDateDuJour());
             while(jour.comparerDates(jour.getDateDuJour(),user.getPlanning().getDateFin())<=0){
-                    System.out.println("Jour de périodicité: " + jour.getDateDuJour().toString());
                     TacheSimple tachePeriodique = (TacheSimple) this;
                     tachePeriodique.setJournee(jour);
-                    System.out.println("nom tache périodique: " + tachePeriodique.getNom());
-                    System.out.println("date tache périodique: " + tachePeriodique.getJournee().getDateDuJour());
                     user.getPlanning().getTachesaPlanifier().add(tachePeriodique);
                     if(projetAjout.getKey()){
                         projetAjout.getValue().getEnsembleDesTaches().add(tachePeriodique);
                     }
-
                 jour.incrementerJour(nbrJourDePeriodicite);
             }
         }
     }
-    void replanifierTache(){
-
+    public void replanifierTache(User user){
+        user.getPlanning().getTachesaPlanifier().remove(this);
+        LocalDate dateDejourneeChoisie = user.getPlanning().choisirDateDansPeriode();
+        Jour journeeChoisie = user.getPlanning().chercherJourDansPeriode(dateDejourneeChoisie);
+        Pair<Creneau, Integer> creneauChoisi = journeeChoisie.choisirCreneauDansUneJournee(user, journeeChoisie);
+        this.setCreneauDeTache(creneauChoisi.getKey());
+        this.setJournee(journeeChoisie);
+        creneauChoisi.getKey().decomposer(creneauChoisi, journeeChoisie.getCreneaux());
+        user.getPlanning().getTachesaPlanifier().add(this);
     }
     public void evaluerTache(User user){
         // Create the choice dialog for evaluation selection

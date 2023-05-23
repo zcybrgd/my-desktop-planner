@@ -169,11 +169,6 @@ public class Planning implements Serializable {
             List<Creneau> creneaux = demanderCreneauxLibres(currentDate, user);
             // Ajouter les créneaux libres au planning pour ce jour
             user.getPlanning().chercherJourDansPeriode(currentDate).setCreneaux(creneaux);
-           // System.out.println("les créneaux libres de cet utilisateur: " + user.getPseudo() + " du jour : " + chercherJourDansPeriode(currentDate));
-            for(Creneau c : user.getPlanning().chercherJourDansPeriode(currentDate).getCreneaux()){
-                System.out.println("date début : " + c.getHeureDebut());
-                System.out.println("date fin : " + c.getHeureFin());
-            }
             // Passer au jour suivant
             currentDate = currentDate.plusDays(1);
         }

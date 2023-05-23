@@ -62,7 +62,7 @@ public abstract class Tache implements Serializable {
     // dans le cas ou la tache est inProgress ou notRealized
     // le système lui demande la durée supplémentaire nécessaire pour l'accomplir,
     // et le nouveau deadline si jamais elle en possède un.
-    abstract void replanifierTache();
+    abstract void replanifierTache(User user);
     abstract void evaluerTache(User user);
     public Tache(Duration duree){
         this.duree = duree;
