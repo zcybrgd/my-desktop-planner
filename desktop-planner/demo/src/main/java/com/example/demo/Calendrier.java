@@ -9,10 +9,7 @@ import com.example.demo.planification.Categorie;
 import com.example.demo.planification.Creneau;
 import com.example.demo.planification.Tache;
 import com.example.demo.planification.TacheSimple;
-import com.example.demo.user.Badge;
-import com.example.demo.user.Planning;
-import com.example.demo.user.Projet;
-import com.example.demo.user.User;
+import com.example.demo.user.*;
 import javafx.animation.PauseTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -57,11 +54,18 @@ public class Calendrier {
            AfficherTasks();
     }
 
-    void modifierNbrTachesDeLaJournee(){
-        //LocalDate.now()
-        user.getPlanning().updateTachesRealiseesDansLaJournee(tachesRealiseesDansLaJournee,LocalDate.now());
-        if(tachesRealiseesDansLaJournee.containsKey(LocalDate.now()) &&
-                tachesRealiseesDansLaJournee.get(LocalDate.now()) == user.getMinTaskPerDay()){
+    void modifierNbrTachesDeLaJournee(TacheSimple tachesimple){
+        List<Jour> jours = user.getPlanning().getJours();
+        Jour targetJour = tachesimple.getJournee();  // The specific Jour object you want to modify
+        int index = jours.indexOf(targetJour);
+        if (index != -1) {
+            Jour jourToUpdate = jours.get(index);
+            jourToUpdate.setTachesRealisees(jourToUpdate.getTachesRealisees()+1);
+            if(jourToUpdate.getTachesRealisees()==user.getMinTaskPerDay()){
+                jourToUpdate.setEncouragement(jourToUpdate.getEncouragement()+1);
+            }
+        }
+        if(tachesimple.getJournee().getEncouragement()>0){
             Label messageLabel = new Label("Félicitations ! Vous avez atteint le nombre minimal de tâches par jour.");
             messageLabel.setStyle("-fx-font-family: Arial; -fx-font-size: 24px; -fx-text-fill: black;");
             VBox root = new VBox(messageLabel);
@@ -81,7 +85,7 @@ public class Calendrier {
             // Start the delay
             delay.play();
             // gérer les encouragements;
-            gererLesEncouragements();
+            gererLesEncouragements(tachesimple);
             System.out.println("--- Afficher les Badges ---");
             try{
                 for(Badge badge : user.getPlanning().getBadges()){
@@ -90,14 +94,14 @@ public class Calendrier {
             }catch(NullPointerException e){e.getMessage();}
         }
     }
-    void gererLesEncouragements(){
+    void gererLesEncouragements(TacheSimple tachesimple){
 
-        int count = tachesRealiseesDansLaJournee.getOrDefault(LocalDate.now(), 0);
+       /* int count = tachesRealiseesDansLaJournee.getOrDefault(tachesimple.getJournee().getDateDuJour(), 0);
         if (count >= user.getMinTaskPerDay()) {
             user.getPlanning().incrementEncouragement(tachesRealiseesDansLaJournee);
         } else {
             user.getPlanning().resetEncouragement(tachesRealiseesDansLaJournee);
-        }
+        }*/
     }
     @FXML
     void affichage(ActionEvent event) {
@@ -243,7 +247,7 @@ public class Calendrier {
             if (dialogButton == evaluerButton) {
                 tacheSimple.evaluerTache(user);
                 AfficherTasks();
-                modifierNbrTachesDeLaJournee();
+                modifierNbrTachesDeLaJournee(tacheSimple);
             } else if (dialogButton == renommerButton) {
                 tacheSimple.changerNom(user);
                 AfficherTasks();
@@ -269,7 +273,7 @@ public class Calendrier {
         } else {
             StringBuilder contentText = new StringBuilder();
             for (Tache task : unscheduledTasks) {
-                contentText.append("Nom : ").append(task.getNom()).append("\n");
+                contentText.append("Nom : ").append(task.getNom()).append("\t\t\t\t");
                 contentText.append("Deadline : ").append(task.getDeadline()).append("\n\n");
             }
 

@@ -18,6 +18,25 @@ import java.util.*;
 public class Jour implements Serializable, Comparable<Jour> {
     private LocalDate dateDuJour;
     public Jour(){}
+    private int encouragement=0;
+    private int tachesRealisees=0;
+
+    public int getTachesRealisees() {
+        return tachesRealisees;
+    }
+
+    public void setTachesRealisees(int tachesRealisees) {
+        this.tachesRealisees = tachesRealisees;
+    }
+
+    public int getEncouragement() {
+        return encouragement;
+    }
+
+    public void setEncouragement(int encouragement) {
+        this.encouragement = encouragement;
+    }
+
     @Override
     public int compareTo(Jour other) {
         return this.dateDuJour.compareTo(other.dateDuJour);
@@ -71,10 +90,8 @@ public class Jour implements Serializable, Comparable<Jour> {
                 break; // Stop searching if we reach the deadline
             }
             List<Creneau> creneaux = jour.getCreneaux();
-            System.out.println("les créneaux de ce jour: " + jour.getDateDuJour().toString());
             for (int i = 0; i < creneaux.size(); i++) {
                 Creneau creneau = creneaux.get(i);
-                System.out.println( creneau.getHeureDebut() +" - " + creneau.getHeureFin());
                 if (creneau.isEstLibre()) {
                     System.out.println("on va retourner ce jour apres recherche: " + jour.getDateDuJour());
                     System.out.println("ce créneau:  " + creneau.getHeureDebut()  + " - " + creneau.getHeureFin());

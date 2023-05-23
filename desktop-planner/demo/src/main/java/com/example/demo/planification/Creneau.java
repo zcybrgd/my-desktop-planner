@@ -1,6 +1,7 @@
 package com.example.demo.planification;
 
 
+import com.example.demo.user.Jour;
 import javafx.util.Pair;
 
 import java.io.Serializable;
@@ -8,6 +9,7 @@ import java.time.Duration;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class Creneau implements Decomposable, Serializable, Comparable<Creneau> {
@@ -126,5 +128,19 @@ public class Creneau implements Decomposable, Serializable, Comparable<Creneau> 
             // Cas où la tâche ne chevauche pas le créneau
             // on le décompose pas
         }
+    }
+    public static Duration calculateTotalDuration(Map<Jour, ArrayList<Pair<Creneau, Integer>>> creneauxDeTache) {
+        Duration totalDuration = Duration.ZERO;
+
+        for (ArrayList<Pair<Creneau, Integer>> creneauxList : creneauxDeTache.values()) {
+            for (Pair<Creneau, Integer> pair : creneauxList) {
+                Creneau creneau = pair.getKey();
+                System.out.println("La durée de ce créneau: " + creneau.calculerDuree());
+                totalDuration = totalDuration.plus(creneau.calculerDuree());
+            }
+        }
+
+        System.out.println("Total Duration: " + totalDuration);
+        return totalDuration;
     }
 }

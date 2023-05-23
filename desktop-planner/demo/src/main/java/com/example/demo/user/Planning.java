@@ -28,46 +28,10 @@ public class Planning implements Serializable {
     private LocalDate dateDebut;
     private LocalDate dateFin;
     private Pair<LocalDate, LocalDate> periode;
-    private int encouragement=0;
+
 
     private List<Badge> lesBadges = new ArrayList<>();
 
-
-    public void incrementEncouragement(Map<LocalDate, Integer> tachesRealiseesDansLaJournee) {
-        LocalDate today = LocalDate.now();
-        int consecutiveDays = tachesRealiseesDansLaJournee.getOrDefault(today, 0);
-        consecutiveDays++;
-        tachesRealiseesDansLaJournee.put(today, consecutiveDays);
-        encouragement++;
-        checkConsecutiveEncouragement();
-    }
-
-    public void resetEncouragement(Map<LocalDate, Integer> tachesRealiseesDansLaJournee) {
-        LocalDate today = LocalDate.now();
-        tachesRealiseesDansLaJournee.remove(today);
-        encouragement = 0;
-    }
-
-
-    private void checkConsecutiveEncouragement() {
-        if (encouragement >= 2) { // 5
-            Badge badge = new Badge("Good");
-            addBadge(badge);
-        }
-        // Check if the "Good" badge has been obtained three times
-        int goodBadgeCount = countBadgeOccurrences("Good");
-        if (goodBadgeCount >= 2) { // 3
-            Badge veryGoodBadge = new Badge("VeryGood");
-            addBadge(veryGoodBadge);
-        }
-
-        // Check if the "VeryGood" badge has been obtained three times
-        int veryGoodBadgeCount = countBadgeOccurrences("VeryGood");
-        if (veryGoodBadgeCount >= 2) { // 2
-            Badge excellentBadge = new Badge("Excellent");
-            addBadge(excellentBadge);
-        }
-    }
     private int countBadgeOccurrences(String badgeName) {
         int count = 0;
         for (Badge badge : lesBadges) {
@@ -136,17 +100,6 @@ public class Planning implements Serializable {
         return new Pair<>(getDateDebut(), getDateFin());
     }
 
-    public void updateTachesRealiseesDansLaJournee(Map<LocalDate, Integer> tachesRealiseesDansLaJournee,LocalDate jourCourant) {
-        int count=0;
-        for (TacheSimple tache : tachesaPlanifier) {
-            if (tache.getJournees().contains(new Jour(jourCourant)) && tache.getStateDeTache() == EtatTache.completed) {
-                count++;
-            }
-        }
-
-        tachesRealiseesDansLaJournee.put(jourCourant, count);
-        System.out.println("Nombre de tâches réalisées dans la journée " + jourCourant + " : " + count);
-    }
 
     public LocalDate choisirDateDansPeriode() {
         DatePicker datePicker = new DatePicker();
@@ -435,7 +388,6 @@ public class Planning implements Serializable {
                         dialogD.setContentText("Entrer la durée provisoire pour cette tache décomposée:");
                         // Show the dialog and wait for the user's input
                         Optional<String> resultD = dialogD.showAndWait();
-
                         // Process the user's input
                         resultD.ifPresent(durationString -> {
                             try {
@@ -472,7 +424,6 @@ public class Planning implements Serializable {
                         alert.showAndWait();
                     }
                 });
-
                 decomposableBtn.setOnAction(e -> {
                     // code to handle the decomposable task goes here
                     try{
@@ -492,7 +443,7 @@ public class Planning implements Serializable {
                                 Duration duration = Duration.ofMinutes(Long.parseLong(durationString));
                                 TacheDecomposable tacheaIntroduire = new TacheDecomposable(duration);
                                 System.out.println("duration : " + duration);
-                                user.introduireUneTacheManuelle(tacheaIntroduire, "Decomposable", null, null,user, projetAjout);
+                                user.introduireUneTacheAuto(tacheaIntroduire, "Decomposable",user, projetAjout);
                             } catch (NumberFormatException ex) {
                                 // Handle invalid input format
                                 Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -511,11 +462,9 @@ public class Planning implements Serializable {
                         alert.showAndWait();
                     }
                 });
-
                 stage.setOnCloseRequest(e -> {
                     System.out.println("closed without choosing");
                 });
-
                 HBox buttonsBox = new HBox(simpleBtn, decomposableBtn);
                 buttonsBox.setSpacing(10);
                 Scene scene = new Scene(buttonsBox, 300, 100);

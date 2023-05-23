@@ -23,6 +23,7 @@ import java.io.*;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -349,6 +350,8 @@ public class User implements Serializable {
             }
         });
 
+        TacheDecomposable tachedeco = new TacheDecomposable(tache.getDuree());
+
         // Display the dialog box and retrieve the entered values
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Nouvelle tâche");
@@ -382,44 +385,101 @@ public class User implements Serializable {
                     }else{
                         selectedCategorie = new Categorie(categorie);
                     }
-                    Pair<Jour, Pair<Creneau, Integer>> planifier = Jour.rechercherCreneauLibreSimple(user,tache.getDuree(), deadline);
-                    if(planifier==null){
-                        tache.setNom(nomTache);
-                        tache.setDeadline(deadline);
-                        user.getPlanning().getTachesUnscheduled().add(tache);
-                        Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
-                        alert2.setTitle("Information");
-                        alert2.setHeaderText("Cette tâche ne peut pas être planifiée");
-                        alert2.setContentText("Veuillez la trouver dans la section non planifiée");
-                        alert2.showAndWait();
-                    }else{
-                        if (tache instanceof TacheSimple) {
-                            TacheSimple tacheSimple = (TacheSimple) tache;
-                            tacheSimple.setNom(nomTache);
-                            System.out.println("est ce que on rentre la: " + tacheSimple.getNom());
-                            tacheSimple.setPriorite(priorite);
-                            tacheSimple.setDeadline(deadline);
-                            tacheSimple.setCategorie(selectedCategorie);
-                            tacheSimple.setNbrJourDePeriodicite(periodicite[0]);
-                            Jour journeeChoisie = user.getPlanning().chercherJourDansPeriode(planifier.getKey().getDateDuJour());
-                            tacheSimple.setJournee(journeeChoisie);
-                            tacheSimple.setCreneauDeTache(planifier.getValue().getKey());
-                            System.out.println("la journée de cette tache auto: " + tacheSimple.getJournee().getDateDuJour());
-                            System.out.println("le creneau " + tacheSimple.getCreneauDeTache().getHeureDebut() + " - " + tacheSimple.getCreneauDeTache().getHeureFin());
-                            planifier.getValue().getKey().decomposer(planifier.getValue(), planifier.getKey().getCreneaux());
-                            tacheSimple.planifierTache(user, projetAjout);
+                    if (type.equals("Simple")){
+                        Pair<Jour, Pair<Creneau, Integer>> planifier = Jour.rechercherCreneauLibreSimple(user,tache.getDuree(), deadline);
+                        if(planifier==null){
+                            tache.setNom(nomTache);
+                            tache.setDeadline(deadline);
+                            user.getPlanning().getTachesUnscheduled().add(tache);
+                            Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
+                            alert2.setTitle("Information");
+                            alert2.setHeaderText("Cette tâche ne peut pas être planifiée");
+                            alert2.setContentText("Veuillez la trouver dans la section non planifiée");
+                            alert2.showAndWait();
+                        }else{
+                            if (tache instanceof TacheSimple) {
+                                TacheSimple tacheSimple = (TacheSimple) tache;
+                                tacheSimple.setNom(nomTache);
+                                tacheSimple.setPriorite(priorite);
+                                tacheSimple.setDeadline(deadline);
+                                tacheSimple.setCategorie(selectedCategorie);
+                                tacheSimple.setNbrJourDePeriodicite(periodicite[0]);
+                                Jour journeeChoisie = user.getPlanning().chercherJourDansPeriode(planifier.getKey().getDateDuJour());
+                                tacheSimple.setJournee(journeeChoisie);
+                                tacheSimple.setCreneauDeTache(planifier.getValue().getKey());
+                                planifier.getValue().getKey().decomposer(planifier.getValue(), planifier.getKey().getCreneaux());
+                                tacheSimple.planifierTache(user, projetAjout);
+                            }
                         }
-                        if (tache instanceof TacheDecomposable) {
-                            TacheDecomposable tacheDecomposable = (TacheDecomposable) tache;
-                            tacheDecomposable.setNom(nomTache);
-                            tacheDecomposable.setDeadline(deadline);
-                            tacheDecomposable.setPriorite(priorite);
-                            tacheDecomposable.setCategorie(selectedCategorie);
-                            // dans décomposer
-                            tacheDecomposable.decomposer(0,user);
-                            tacheDecomposable.planifierTache(user, projetAjout);
+                    } else {
+                        boolean keepOnDecompo=false;
+                        boolean peutOnPlanifier=false;
+                        while(!keepOnDecompo){
+                            Pair<Jour, Pair<Creneau, Integer>> planifier = Jour.rechercherCreneauLibreDecompo(user,tache.getDuree(), deadline);
+                            if(planifier==null){
+                                Tache tach = new TacheSimple(tache.getDuree());
+                                tach.setNom(nomTache);
+                                tach.setDeadline(deadline);
+                                user.getPlanning().getTachesUnscheduled().add(tach);
+                                Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
+                                alert2.setTitle("Information");
+                                alert2.setHeaderText("Cette tâche ne peut pas être planifiée");
+                                alert2.setContentText("Veuillez la trouver dans la section non planifiée");
+                                alert2.showAndWait();
+                                keepOnDecompo = true;
+                            }else{
+                                // durée entrée est égale ou inférieure au temps du créneau;
+                                if(tache.getDuree().compareTo(planifier.getValue().getKey().calculerDuree())<=0){
+                                        TacheSimple tacheSimple = new TacheSimple(tache.getDuree());
+                                        tacheSimple.setNom(nomTache);
+                                        tacheSimple.setPriorite(priorite);
+                                        tacheSimple.setDeadline(deadline);
+                                        tacheSimple.setCategorie(selectedCategorie);
+                                        Jour journeeChoisie = user.getPlanning().chercherJourDansPeriode(planifier.getKey().getDateDuJour());
+                                        tacheSimple.setJournee(journeeChoisie);
+                                        if(tache.getDuree().compareTo(planifier.getValue().getKey().calculerDuree())==0){
+                                            tacheSimple.setCreneauDeTache(planifier.getValue().getKey());
+                                            planifier.getValue().getKey().decomposer(planifier.getValue(), planifier.getKey().getCreneaux());
+                                        }else{
+                                            tacheSimple.setCreneauDeTache(planifier.getValue().getKey().substituteDuration(tache.getDuree()));
+                                            Pair<Creneau, Integer> creneauUnDeco = new Pair<>(planifier.getValue().getKey().substituteDuration(tache.getDuree()),planifier.getValue().getValue());
+                                            planifier.getValue().getKey().decomposer(creneauUnDeco, planifier.getKey().getCreneaux());
+                                        }
+                                        tacheSimple.planifierTache(user, projetAjout);
+                                        keepOnDecompo=true;
+                                }else{
+
+                                    if (!tachedeco.getCreneauxDeTache().containsKey(planifier.getKey())) {
+                                        // If jourP is not in the map, create a new ArrayList with creneauP
+                                        ArrayList<Pair<Creneau, Integer>> creneauxList = new ArrayList<>();
+                                        creneauxList.add(planifier.getValue());
+
+                                        // Add jourP and the ArrayList to the map
+                                        tachedeco.getCreneauxDeTache().put(planifier.getKey(), creneauxList);
+                                    } else {
+                                        // If jourP is already in the map, retrieve the existing ArrayList and add creneauP to it
+                                        ArrayList<Pair<Creneau, Integer>> creneauxList = tachedeco.getCreneauxDeTache().get(planifier.getKey());
+                                        creneauxList.add(planifier.getValue());
+                                    }
+                                      Duration totalDuree = Creneau.calculateTotalDuration(tachedeco.getCreneauxDeTache());
+                                      if(tachedeco.getDuree().compareTo(totalDuree)==0){
+                                          keepOnDecompo=true;
+                                          peutOnPlanifier=true;
+                                      }
+
+                                }
+                            }
+                        }
+                        if(peutOnPlanifier){
+                            tachedeco.setNom(nomTache);
+                            tachedeco.setDeadline(deadline);
+                            tachedeco.setPriorite(priorite);
+                            tachedeco.setCategorie(selectedCategorie);
+                            tachedeco.decomposer(0,user);
+                            tachedeco.planifierTache(user, projetAjout);
                         }
                     }
+
                 }
 
             }

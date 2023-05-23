@@ -42,7 +42,12 @@ public class TacheDecomposable extends Tache implements Decomposable, Serializab
     public void evaluerTache(User user){
 
     }
-    private Map<Jour,  Creneau> creneauxDeTache;
+    private Map<Jour,  ArrayList<Pair<Creneau, Integer>>> creneauxDeTache= new TreeMap<>();
+
+    public Map<Jour, ArrayList<Pair<Creneau, Integer>>> getCreneauxDeTache() {
+        return creneauxDeTache;
+    }
+
     public TacheDecomposable(){}
     public void decomposer(int nbrDecompo, User user){
         if(nbrDecompo!=0){
@@ -58,6 +63,24 @@ public class TacheDecomposable extends Tache implements Decomposable, Serializab
                 sousTache.setJournee(journeeChoisie);
                 sousTaches.add(sousTache);
             }} else{// dans l'automatique
+            if(!creneauxDeTache.isEmpty()){
+                int i = 0;
+                for (Map.Entry<Jour, ArrayList<Pair<Creneau, Integer>>> entry : creneauxDeTache.entrySet()) {
+                    Jour jour = entry.getKey();
+                    ArrayList<Pair<Creneau, Integer>> creneauxList = entry.getValue();
+
+                    for (Pair<Creneau, Integer> pair : creneauxList) {
+                        pair.getKey().decomposer(pair, jour.getCreneaux());
+                        Duration dureeDeSousTache = pair.getKey().calculerDuree();
+                        TacheSimple sousTache = new TacheSimple(this.getNom() + " " + i, dureeDeSousTache, this.getPriorite(), this.getDeadline(), this.getCategorie(), 0);
+                        sousTache.setCreneauDeTache(pair.getKey());
+                        sousTache.getJournees().add(jour);
+                        sousTache.setJournee(jour);
+                        sousTaches.add(sousTache);
+                        i++;
+                    }
+                }
+            }
          }}
 
     }
