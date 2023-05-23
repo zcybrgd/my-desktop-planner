@@ -112,9 +112,6 @@ public class Planning implements Serializable {
         this.periode = new Pair<LocalDate, LocalDate>(dateDebut, dateFin);
     }
 
-    // pour stocker les créneaux horaires libres. Par exemple,
-    // {(LocalTime.of(13,0), LocalTime.of(15,0)), (LocalTime.of(18,0), LocalTime.of(22,0))}
-    // représente les créneaux libres de 13h à 15h et de 18h à 22h.
     private List<Pair<LocalTime, LocalTime>> creneaux;
 
     public Planning(){}
@@ -133,7 +130,6 @@ public class Planning implements Serializable {
         return dateFin;
     }
 
-    // LocalDate rentabilité() // le jour ou il était le plus rentable
     // replanifier() // replanifier les taches
 
     public Pair<LocalDate, LocalDate> getPeriode() {
@@ -343,9 +339,6 @@ public class Planning implements Serializable {
                 Button decomposableBtn = new Button("Decomposable");
                 simpleBtn.setOnAction(e -> {
                     try{
-                        if(user.getPlanning()!=null){
-                            System.out.println("user : " + user.getPseudo()+ "planning: " + user.getPlanning().getPeriode());
-                        }
                         if(user.getPlanning()==null) throw new PasDePlanning("Vous n'avez initialiser aucun Planning");
                         e.consume();
                         LocalDate dateDejourneeChoisie = user.getPlanning().choisirDateDansPeriode();
@@ -376,9 +369,6 @@ public class Planning implements Serializable {
                 decomposableBtn.setOnAction(e -> {
                     // code to handle the decomposable task goes here
                     try{
-                        if(user.getPlanning()!=null){
-                            System.out.println("user : " + user.getPseudo()+ "planning: " + user.getPlanning().getPeriode());
-                        }
                         if(user.getPlanning()==null) throw new PasDePlanning("Vous n'avez initialiser aucun Planning");
                         // Create a dialog box for entering the duration
                         TextInputDialog dialogD = new TextInputDialog();
@@ -437,16 +427,12 @@ public class Planning implements Serializable {
                 Button decomposableBtn = new Button("Decomposable");
                 simpleBtn.setOnAction(e -> {
                     try{
-                        if(user.getPlanning()!=null){
-                            System.out.println("user : " + user.getPseudo()+ "planning: " + user.getPlanning().getPeriode());
-                        }
                         if(user.getPlanning()==null) throw new PasDePlanning("Vous n'avez initialiser aucun Planning");
                         e.consume();
                         TextInputDialog dialogD = new TextInputDialog();
                         dialogD.setTitle("Entrer la Durée ");
                         dialogD.setHeaderText(null);
                         dialogD.setContentText("Entrer la durée provisoire pour cette tache décomposée:");
-
                         // Show the dialog and wait for the user's input
                         Optional<String> resultD = dialogD.showAndWait();
 
@@ -463,6 +449,8 @@ public class Planning implements Serializable {
                                     alert.showAndWait();
                                 } else {
                                     TacheSimple tacheaIntroduire = new TacheSimple(duration);
+                                    tacheaIntroduire.setJournee(null);
+                                    tacheaIntroduire.setCreneauDeTache(null);
                                     System.out.println("duration : " + duration);
                                     user.introduireUneTacheAuto(tacheaIntroduire, "Simple", user, projetAjout);
                                 }
@@ -488,9 +476,6 @@ public class Planning implements Serializable {
                 decomposableBtn.setOnAction(e -> {
                     // code to handle the decomposable task goes here
                     try{
-                        if(user.getPlanning()!=null){
-                            System.out.println("user : " + user.getPseudo()+ "planning: " + user.getPlanning().getPeriode());
-                        }
                         if(user.getPlanning()==null) throw new PasDePlanning("Vous n'avez initialiser aucun Planning");
                         // Create a dialog box for entering the duration
                         TextInputDialog dialogD = new TextInputDialog();

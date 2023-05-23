@@ -12,7 +12,8 @@ public class HelloApplication extends Application{
 
     private static String fileNameUsers = "users.bin";
 
-    public static String getFileNameUsers() {
+    public static String getFileNameUsers()
+    {
         return fileNameUsers;
     }
 

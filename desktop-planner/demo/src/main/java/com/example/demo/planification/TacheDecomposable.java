@@ -10,9 +10,7 @@ import javafx.util.Pair;
 import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 public class TacheDecomposable extends Tache implements Decomposable, Serializable {
     public TacheDecomposable(String nom, Duration duree, Prio priorite, LocalDate deadline, Categorie categorie){
@@ -44,6 +42,7 @@ public class TacheDecomposable extends Tache implements Decomposable, Serializab
     public void evaluerTache(User user){
 
     }
+    private Map<Jour,  Creneau> creneauxDeTache;
     public TacheDecomposable(){}
     public void decomposer(int nbrDecompo, User user){
         if(nbrDecompo!=0){

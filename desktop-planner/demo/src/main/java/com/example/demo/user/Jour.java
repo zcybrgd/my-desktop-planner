@@ -45,16 +45,41 @@ public class Jour implements Serializable, Comparable<Jour> {
         this.creneaux = creneaux;
     }
 
-    public static Pair<Jour, Pair<Creneau, Integer>> rechercherCreneauLibre(User user, Duration duration, LocalDate deadline) {
+    public static Pair<Jour, Pair<Creneau, Integer>> rechercherCreneauLibreSimple(User user, Duration duration, LocalDate deadline) {
         for (Jour jour : user.getPlanning().getJours()) {
             if (jour.getDateDuJour().isAfter(deadline)) {
                 break; // Stop searching if we reach the deadline
             }
             List<Creneau> creneaux = jour.getCreneaux();
+            System.out.println("les créneaux de ce jour: " + jour.getDateDuJour().toString());
             for (int i = 0; i < creneaux.size(); i++) {
                 Creneau creneau = creneaux.get(i);
+                System.out.println( creneau.getHeureDebut() +" - " + creneau.getHeureFin());
                 if (creneau.calculerDuree().compareTo(duration) >= 0) {
+                    System.out.println("on va retourner ce jour apres recherche: " + jour.getDateDuJour());
+                    System.out.println("ce créneau:  " + creneau.substituteDuration(duration).getHeureDebut()  + " - " + creneau.substituteDuration(duration).getHeureFin());
                     return new Pair<>(jour, new Pair<>(creneau.substituteDuration(duration), i)); // Found a free time slot
+                }
+            }
+        }
+
+        return null; // No free time slot found
+    }
+    public static Pair<Jour, Pair<Creneau, Integer>> rechercherCreneauLibreDecompo(User user, Duration duration, LocalDate deadline) {
+        for (Jour jour : user.getPlanning().getJours()) {
+            if (jour.getDateDuJour().isAfter(deadline)) {
+                break; // Stop searching if we reach the deadline
+            }
+            List<Creneau> creneaux = jour.getCreneaux();
+            System.out.println("les créneaux de ce jour: " + jour.getDateDuJour().toString());
+            for (int i = 0; i < creneaux.size(); i++) {
+                Creneau creneau = creneaux.get(i);
+                System.out.println( creneau.getHeureDebut() +" - " + creneau.getHeureFin());
+                if (creneau.isEstLibre()) {
+                    System.out.println("on va retourner ce jour apres recherche: " + jour.getDateDuJour());
+                    System.out.println("ce créneau:  " + creneau.getHeureDebut()  + " - " + creneau.getHeureFin());
+                    creneau.setEstLibre(false);
+                    return new Pair<>(jour, new Pair<>(creneau, i)); // Found a free time slot
                 }
             }
         }

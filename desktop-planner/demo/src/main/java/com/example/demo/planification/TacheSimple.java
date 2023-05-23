@@ -13,6 +13,7 @@ import javafx.util.Pair;
 import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -41,29 +42,28 @@ public class TacheSimple extends Tache implements Serializable, Comparable<Tache
 
 
 
-    @Override
     public int compareTo(TacheSimple other) {
-        Set<Jour> thisJournees = this.getJournees();
-        Set<Jour> otherJournees = other.getJournees();
+        Jour thisJour = this.getJournee();
+        Jour otherJour = other.getJournee();
 
-        if (thisJournees.isEmpty() && otherJournees.isEmpty()) {
+        if (thisJour == null && otherJour == null) {
             return 0;
-        } else if (thisJournees.isEmpty()) {
+        } else if (thisJour == null) {
             return -1;
-        } else if (otherJournees.isEmpty()) {
+        } else if (otherJour == null) {
             return 1;
         }
-
-        Jour thisJour = thisJournees.iterator().next();
-        Jour otherJour = otherJournees.iterator().next();
 
         int jourComparison = thisJour.compareTo(otherJour);
         if (jourComparison != 0) {
             return jourComparison;
         } else {
-            return this.getCreneauDeTache().compareTo(other.getCreneauDeTache());
+            Creneau thisCreneau = this.getCreneauDeTache();
+            Creneau otherCreneau = other.getCreneauDeTache();
+            return thisCreneau.compareTo(otherCreneau);
         }
     }
+
 
     public void setNbrJourDePeriodicite(int nbrJourDePeriodicite) {
         this.nbrJourDePeriodicite = nbrJourDePeriodicite;
@@ -107,6 +107,7 @@ public class TacheSimple extends Tache implements Serializable, Comparable<Tache
         if(projetAjout.getKey()){
             projetAjout.getValue().getEnsembleDesTaches().add(this);
         }
+
         if(nbrJourDePeriodicite>0){
             Jour jour = new Jour(this.journee.getDateDuJour());
             while(jour.comparerDates(jour.getDateDuJour(),user.getPlanning().getDateFin())<=0){

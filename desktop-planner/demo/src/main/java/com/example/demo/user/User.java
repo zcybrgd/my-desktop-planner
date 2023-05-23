@@ -382,34 +382,43 @@ public class User implements Serializable {
                     }else{
                         selectedCategorie = new Categorie(categorie);
                     }
-                    if (tache instanceof TacheSimple) {
-                        TacheSimple tacheSimple = (TacheSimple) tache;
-                        tacheSimple.setNom(nomTache);
-                        tacheSimple.setPriorite(priorite);
-                        tacheSimple.setDeadline(deadline);
-                        tacheSimple.setCategorie(selectedCategorie);
-                        tacheSimple.setNbrJourDePeriodicite(periodicite[0]);
-                        Pair<Jour, Pair<Creneau, Integer>> planifier = Jour.rechercherCreneauLibre(user,tacheSimple.getDuree(), tacheSimple.getDeadline());
-                        if(planifier==null){
-                            user.getPlanning().getTachesUnscheduled().add(tacheSimple);
-                        }else{
-                            tacheSimple.setJournee(planifier.getKey());
+                    Pair<Jour, Pair<Creneau, Integer>> planifier = Jour.rechercherCreneauLibreSimple(user,tache.getDuree(), deadline);
+                    if(planifier==null){
+                        tache.setNom(nomTache);
+                        tache.setDeadline(deadline);
+                        user.getPlanning().getTachesUnscheduled().add(tache);
+                        Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
+                        alert2.setTitle("Information");
+                        alert2.setHeaderText("Cette tâche ne peut pas être planifiée");
+                        alert2.setContentText("Veuillez la trouver dans la section non planifiée");
+                        alert2.showAndWait();
+                    }else{
+                        if (tache instanceof TacheSimple) {
+                            TacheSimple tacheSimple = (TacheSimple) tache;
+                            tacheSimple.setNom(nomTache);
+                            System.out.println("est ce que on rentre la: " + tacheSimple.getNom());
+                            tacheSimple.setPriorite(priorite);
+                            tacheSimple.setDeadline(deadline);
+                            tacheSimple.setCategorie(selectedCategorie);
+                            tacheSimple.setNbrJourDePeriodicite(periodicite[0]);
+                            Jour journeeChoisie = user.getPlanning().chercherJourDansPeriode(planifier.getKey().getDateDuJour());
+                            tacheSimple.setJournee(journeeChoisie);
                             tacheSimple.setCreneauDeTache(planifier.getValue().getKey());
                             System.out.println("la journée de cette tache auto: " + tacheSimple.getJournee().getDateDuJour());
                             System.out.println("le creneau " + tacheSimple.getCreneauDeTache().getHeureDebut() + " - " + tacheSimple.getCreneauDeTache().getHeureFin());
                             planifier.getValue().getKey().decomposer(planifier.getValue(), planifier.getKey().getCreneaux());
                             tacheSimple.planifierTache(user, projetAjout);
                         }
-                    }
-                    if (tache instanceof TacheDecomposable) {
-                        TacheDecomposable tacheDecomposable = (TacheDecomposable) tache;
-                        tacheDecomposable.setNom(nomTache);
-                        tacheDecomposable.setDeadline(deadline);
-                        tacheDecomposable.setPriorite(priorite);
-                        tacheDecomposable.setCategorie(selectedCategorie);
-                        // dans décomposer
-                        tacheDecomposable.decomposer(0,user);
-                        tacheDecomposable.planifierTache(user, projetAjout);
+                        if (tache instanceof TacheDecomposable) {
+                            TacheDecomposable tacheDecomposable = (TacheDecomposable) tache;
+                            tacheDecomposable.setNom(nomTache);
+                            tacheDecomposable.setDeadline(deadline);
+                            tacheDecomposable.setPriorite(priorite);
+                            tacheDecomposable.setCategorie(selectedCategorie);
+                            // dans décomposer
+                            tacheDecomposable.decomposer(0,user);
+                            tacheDecomposable.planifierTache(user, projetAjout);
+                        }
                     }
                 }
 

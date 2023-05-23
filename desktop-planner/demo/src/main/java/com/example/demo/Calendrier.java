@@ -4,6 +4,7 @@ package com.example.demo;
 
 
 import com.example.demo.enumerations.EtatTache;
+import com.example.demo.enumerations.Prio;
 import com.example.demo.planification.Categorie;
 import com.example.demo.planification.Creneau;
 import com.example.demo.planification.Tache;
@@ -116,8 +117,6 @@ public class Calendrier {
             ScrollPane scrollPane = new ScrollPane(taskBoxContainer);
             scrollPane.setFitToWidth(true);
             scrollPane.setStyle("-fx-background-color: transparent;"); // Make the background transparent
-            // Sort the tasks by date
-
             // Iterate over the sorted tasks and create buttons
             String currentDate = null;
             for (TacheSimple tacheSimple : tacheSimpleSet) {
@@ -137,6 +136,9 @@ public class Calendrier {
                    lesActionsSurLesTaches(tacheSimple);
                 });
                 // Create a label for the task priority
+                if(tacheSimple.getPriorite()==null){
+                    tacheSimple.setPriorite(Prio.LOW);
+                }
                 Label priorityLabel = new Label(tacheSimple.getPriorite().toString());
                 priorityLabel.setStyle("-fx-font-size: 12px;");
 
@@ -194,13 +196,6 @@ public class Calendrier {
     public Scene calendarInit(Stage primaryStage) {
         Scene previousScene = primaryStage.getScene(); // Get the previous scene
         if (user.confirmerNouvellePeriode()) {
-            if(user.getPlanning()!=null && user.getHistorique()==null){
-                ArrayList<Planning> historique = new ArrayList<>();
-                historique.add(user.getPlanning());
-                user.setHistorique(historique);
-            }else if(user.getPlanning()!=null && user.getHistorique()!=null){
-                user.getHistorique().add(user.getPlanning());
-            }
             Scene scene = user.fixerUneNouvellePériode(user);
             Stage stage = new Stage();
             stage.setScene(scene);
