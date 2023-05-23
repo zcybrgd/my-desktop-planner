@@ -85,7 +85,7 @@ public class Calendrier {
             // Start the delay
             delay.play();
             // gérer les encouragements;
-            gererLesEncouragements(tachesimple);
+            gererLesEncouragements();
             System.out.println("--- Afficher les Badges ---");
             try{
                 for(Badge badge : user.getPlanning().getBadges()){
@@ -94,14 +94,40 @@ public class Calendrier {
             }catch(NullPointerException e){e.getMessage();}
         }
     }
-    void gererLesEncouragements(TacheSimple tachesimple){
+    void gererLesEncouragements(){
+        List<Jour> jours = user.getPlanning().getJours();
+        int consecutiveDays = 0; // Compteur de jours consécutifs avec 1 encouragement
 
-       /* int count = tachesRealiseesDansLaJournee.getOrDefault(tachesimple.getJournee().getDateDuJour(), 0);
-        if (count >= user.getMinTaskPerDay()) {
-            user.getPlanning().incrementEncouragement(tachesRealiseesDansLaJournee);
-        } else {
-            user.getPlanning().resetEncouragement(tachesRealiseesDansLaJournee);
-        }*/
+        for (Jour jour : jours) {
+            System.out.println("encouragement: " + jour.getEncouragement() + " de " + jour.getDateDuJour());
+            if (jour.getEncouragement() == 1) {
+                consecutiveDays++;
+                if (consecutiveDays == 2) { //5
+                    System.out.println("est ce que on add un good la?");
+                    Badge badgeGood = new Badge("Good");
+                    user.getPlanning().addBadge(badgeGood);
+                }
+            } else {
+                consecutiveDays = 0;
+            }
+        }
+
+        int goodBadgeCount = 0; // Compteur de badges "Good" obtenus
+        if(user.getPlanning().getBadges()==null){
+            user.getPlanning().setBadges(new ArrayList<>());
+        }
+           for (Badge badge : user.getPlanning().getBadges()) {
+               if (badge.getBadgeLabel().equals("Good")) {
+                   goodBadgeCount++;
+                   if (goodBadgeCount == 2) { // 3
+                       Badge badgeVGood = new Badge("VeryGood");
+                       user.getPlanning().addBadge(badgeVGood);
+                   } else if (goodBadgeCount == 4) { // 6
+                       Badge badgeE = new Badge("Excellent");
+                       user.getPlanning().addBadge(badgeE);
+                   }
+               }
+           }
     }
     @FXML
     void affichage(ActionEvent event) {

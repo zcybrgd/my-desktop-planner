@@ -70,13 +70,10 @@ public class Jour implements Serializable, Comparable<Jour> {
                 break; // Stop searching if we reach the deadline
             }
             List<Creneau> creneaux = jour.getCreneaux();
-            System.out.println("les créneaux de ce jour: " + jour.getDateDuJour().toString());
             for (int i = 0; i < creneaux.size(); i++) {
                 Creneau creneau = creneaux.get(i);
                 System.out.println( creneau.getHeureDebut() +" - " + creneau.getHeureFin());
                 if (creneau.calculerDuree().compareTo(duration) >= 0) {
-                    System.out.println("on va retourner ce jour apres recherche: " + jour.getDateDuJour());
-                    System.out.println("ce créneau:  " + creneau.substituteDuration(duration).getHeureDebut()  + " - " + creneau.substituteDuration(duration).getHeureFin());
                     return new Pair<>(jour, new Pair<>(creneau.substituteDuration(duration), i)); // Found a free time slot
                 }
             }
@@ -93,8 +90,6 @@ public class Jour implements Serializable, Comparable<Jour> {
             for (int i = 0; i < creneaux.size(); i++) {
                 Creneau creneau = creneaux.get(i);
                 if (creneau.isEstLibre()) {
-                    System.out.println("on va retourner ce jour apres recherche: " + jour.getDateDuJour());
-                    System.out.println("ce créneau:  " + creneau.getHeureDebut()  + " - " + creneau.getHeureFin());
                     creneau.setEstLibre(false);
                     return new Pair<>(jour, new Pair<>(creneau, i)); // Found a free time slot
                 }
@@ -136,7 +131,6 @@ public class Jour implements Serializable, Comparable<Jour> {
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == selectButtonType) {
                 int selectedIndex = listView.getSelectionModel().getSelectedIndex();
-                System.out.println("selected index : " + selectedIndex);
                 return selectedIndex;
             }
             return null;
@@ -194,13 +188,12 @@ public class Jour implements Serializable, Comparable<Jour> {
                     return creneauChoisi;
                 }
             }catch(IndexOutOfBoundsException e){
-                System.out.println("aucun créneau trouvé");
                 // je fais en sorte qu'il fixe les créneaux pour cette journée manquante
             }
 
 
         }else{
-            System.out.println("aucun créneau choisi");
+
         }
         return null;
     }

@@ -33,7 +33,6 @@ public class TacheSimple extends Tache implements Serializable, Comparable<Tache
         // Show the text input dialog and get the entered name
         Optional<String> result = inputDialog.showAndWait();
         result.ifPresent(newName -> {
-            System.out.println("New name: " + newName);
             // Perform the desired action with the entered new name
             this.setNom(newName);
             user.getPlanning().getTachesaPlanifier().add(this);
@@ -138,7 +137,6 @@ public class TacheSimple extends Tache implements Serializable, Comparable<Tache
         // Show the choice dialog and get the selected evaluation
         Optional<EtatTache> result = choiceDialog.showAndWait();
         result.ifPresent(etatTache -> {
-            System.out.println("Selected evaluation: " + etatTache);
             this.setStateDeTache(etatTache);
             user.getPlanning().getTachesaPlanifier().add(this);
             // Perform the desired action with the selected evaluation

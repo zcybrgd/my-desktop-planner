@@ -32,19 +32,11 @@ public class Planning implements Serializable {
 
     private List<Badge> lesBadges = new ArrayList<>();
 
-    private int countBadgeOccurrences(String badgeName) {
-        int count = 0;
-        for (Badge badge : lesBadges) {
-            if (badge.getBadgeLabel().equals(badgeName)) {
-                count++;
-            }
-        }
-        return count;
-    }
+
     public void addBadge(Badge badge) {
         lesBadges.add(badge);
     }
-    private List<Badge> Badges ;// nbr de badges gagnés
+    private List<Badge> Badges;
     private ArrayList<Projet> userProjects = new ArrayList<>();
 
     public ArrayList<Projet> getUserProjects() {
@@ -84,6 +76,7 @@ public class Planning implements Serializable {
         this.dateFin = dateFin;
         setPeriode(dateDebut, dateFin);
         setJours(periode);
+        this.lesBadges = new ArrayList<>();
      }
 
     public LocalDate getDateDebut() {
@@ -157,9 +150,6 @@ public class Planning implements Serializable {
             jours.add(new Jour(currentDate));
             currentDate = currentDate.plusDays(1);
         }
-       for(Jour j : jours){
-           System.out.println(j.getDateDuJour().toString());
-       }
         this.jours = jours;
     }
 
@@ -179,7 +169,7 @@ public class Planning implements Serializable {
             List<Creneau> creneaux = demanderCreneauxLibres(currentDate, user);
             // Ajouter les créneaux libres au planning pour ce jour
             user.getPlanning().chercherJourDansPeriode(currentDate).setCreneaux(creneaux);
-            System.out.println("les créneaux libres de cet utilisateur: " + user.getPseudo() + " du jour : " + chercherJourDansPeriode(currentDate));
+           // System.out.println("les créneaux libres de cet utilisateur: " + user.getPseudo() + " du jour : " + chercherJourDansPeriode(currentDate));
             for(Creneau c : user.getPlanning().chercherJourDansPeriode(currentDate).getCreneaux()){
                 System.out.println("date début : " + c.getHeureDebut());
                 System.out.println("date fin : " + c.getHeureFin());
@@ -300,11 +290,10 @@ public class Planning implements Serializable {
                         try {
                             if (creneauChoisi != null && creneauChoisi.getKey() != null) {
                                 Duration dureeDeTache = creneauChoisi.getKey().calculerDuree();
-                                System.out.println("On va planifier une tache simple");
                                 TacheSimple tacheaIntroduire = new TacheSimple(dureeDeTache, creneauChoisi.getKey(), journeeChoisie);
                                 user.introduireUneTacheManuelle(tacheaIntroduire, "Simple", creneauChoisi, journeeChoisie,user, projetAjout);
                             } else {
-                                System.out.println("Pas de créneau à décomposer");
+
                             }
                         } catch (NullPointerException ex) {
                             System.out.println("Une erreur s'est produite : " + ex.getMessage());
@@ -337,7 +326,6 @@ public class Planning implements Serializable {
                             try {
                                 Duration duration = Duration.ofMinutes(Long.parseLong(durationString));
                                 TacheDecomposable tacheaIntroduire = new TacheDecomposable(duration);
-                                System.out.println("duration : " + duration);
                                 user.introduireUneTacheManuelle(tacheaIntroduire, "Decomposable", null, null,user, projetAjout);
                             } catch (NumberFormatException ex) {
                                 // Handle invalid input format
@@ -403,7 +391,6 @@ public class Planning implements Serializable {
                                     TacheSimple tacheaIntroduire = new TacheSimple(duration);
                                     tacheaIntroduire.setJournee(null);
                                     tacheaIntroduire.setCreneauDeTache(null);
-                                    System.out.println("duration : " + duration);
                                     user.introduireUneTacheAuto(tacheaIntroduire, "Simple", user, projetAjout);
                                 }
                             } catch (NumberFormatException ex) {
@@ -442,7 +429,6 @@ public class Planning implements Serializable {
                             try {
                                 Duration duration = Duration.ofMinutes(Long.parseLong(durationString));
                                 TacheDecomposable tacheaIntroduire = new TacheDecomposable(duration);
-                                System.out.println("duration : " + duration);
                                 user.introduireUneTacheAuto(tacheaIntroduire, "Decomposable",user, projetAjout);
                             } catch (NumberFormatException ex) {
                                 // Handle invalid input format

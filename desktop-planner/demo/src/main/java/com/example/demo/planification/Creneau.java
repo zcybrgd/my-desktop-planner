@@ -121,7 +121,6 @@ public class Creneau implements Decomposable, Serializable, Comparable<Creneau> 
             creneauxDeLaJournee.add(creneauFin);
         } else if (heureDebutTache.isAfter(heureDebutCreneau)
                 && heureDebutTache.isBefore(heureFinCreneau)&& heureFinTache.equals(heureFinCreneau)) {
-            System.out.println("la tache est programmée à la fin du créneau");
             Creneau nvCreneau = new Creneau(heureDebutCreneau, heureDebutTache);
             creneauxDeLaJournee.set(creneauChoisi.getValue(), nvCreneau);
         } else {
@@ -135,7 +134,6 @@ public class Creneau implements Decomposable, Serializable, Comparable<Creneau> 
         for (ArrayList<Pair<Creneau, Integer>> creneauxList : creneauxDeTache.values()) {
             for (Pair<Creneau, Integer> pair : creneauxList) {
                 Creneau creneau = pair.getKey();
-                System.out.println("La durée de ce créneau: " + creneau.calculerDuree());
                 totalDuration = totalDuration.plus(creneau.calculerDuree());
             }
         }

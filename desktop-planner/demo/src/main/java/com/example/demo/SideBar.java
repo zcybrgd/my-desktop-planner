@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import com.example.demo.interfacesGraphiques.loginpage;
+import com.example.demo.user.Badge;
 import com.example.demo.user.User;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -113,6 +114,9 @@ public class SideBar  {
         });
         statItem.setOnAction(stats->{
             showPage("stats.fxml");
+            for (Badge badge : utilisateur.getPlanning().getBadges()) {
+                System.out.println("on est dans la boucle sidebar pour afficher les badges: " + badge.getBadgeLabel());
+            }
         });
         historyItem.setOnAction(histo->{
             showPage("historique.fxml");

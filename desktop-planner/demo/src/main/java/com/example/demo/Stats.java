@@ -13,13 +13,13 @@ public class Stats {
     public void setUser(User user) {
         this.user = user;
         try{
-            List<Badge> badges = user.getPlanning().getBadges();
-            badges.add(new Badge("Good"));
+            List<Badge> badges = this.user.getPlanning().getBadges();
             // Count the occurrences of each badge type
             int goodCount = 0;
             int vGoodCount = 0;
             int excellentCount = 0;
             for (Badge badge : badges) {
+                System.out.println("on est dans la boucle pour afficher les badges: " + badge.getBadgeLabel());
                 String badgeType = badge.getBadgeLabel();
                 if (badgeType.equals("Good")) {
                     goodCount++;
@@ -30,9 +30,9 @@ public class Stats {
                 }
             }
            // Update the label texts with the badge counts
-            Good.setText("You have " + goodCount + " Good Badges");
-            VGood.setText("You have " + vGoodCount + " VeryGood Badges");
-            Excellent.setText("You have " + excellentCount + " Excellent Badges");
+            Good.setText(goodCount + " Good Badges");
+            VGood.setText(vGoodCount + " Very Good Badges");
+            Excellent.setText(excellentCount + " Excellent Badges");
         }catch(NullPointerException e){e.getMessage();}
 
     }
