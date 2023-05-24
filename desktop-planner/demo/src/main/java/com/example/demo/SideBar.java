@@ -17,6 +17,8 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class SideBar {
@@ -103,10 +105,26 @@ public class SideBar {
         logoutButton.setOnAction(logout->{
             Stage currentStage = (Stage) logoutButton.getScene().getWindow();
             // Close the current window
-            currentStage.close();
+            /***/
+            // Show confirmation alert
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Sauvegarder votre activité dans l'application");
+            alert.setHeaderText("Voulez-vous sauvegarder avant de quitter l'application?");
+            alert.setContentText("Cliquez sur OK pour enregistrer ou sur Annuler pour annuler vos modifications.");
+
+            ButtonType saveButton = new ButtonType("OK");
+            ButtonType cancelButton = new ButtonType("Annuler", ButtonBar.ButtonData.CANCEL_CLOSE);
+            alert.getButtonTypes().setAll(saveButton, cancelButton);
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == saveButton) {
+                ArrayList<User> modified = new ArrayList<>();
+                modified.add(utilisateur);
+                User.updateUsersFile(modified,HelloApplication.getFileNameUsers());
+            }
+            /***/
             Stage primaryStage = new Stage();
             primaryStage.setTitle("User Login");
-            System.out.println("ahaha");
+            currentStage.close();
             loginpage page = new loginpage();
             GridPane loginGrid = page.creerPageLogin();
             Scene loginScene = new Scene(loginGrid, 900, 600);
