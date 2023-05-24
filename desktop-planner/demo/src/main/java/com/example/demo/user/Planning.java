@@ -108,14 +108,15 @@ public class Planning implements Serializable {
             }
         });
 
-        Button btnOk = new Button("OK");
+        Button btnOk = new Button("Valider");
+        btnOk.setStyle("-fx-font-size: 16px; -fx-background-color: white; -fx-background-radius: 25px; -fx-border-color: #2F80ED; -fx-border-radius: 25; -fx-min-width: 150px;");
         btnOk.setOnAction(event -> {
             Stage stage = (Stage) btnOk.getScene().getWindow();
             stage.close();
         });
 
         VBox root = new VBox(datePicker, btnOk);
-        root.setSpacing(10);
+        root.setSpacing(20);
         root.setPadding(new Insets(10));
 
         // appliquer le style CSS directement dans le code Java
@@ -366,6 +367,8 @@ public class Planning implements Serializable {
                 stage.setTitle("Le type de la tache que vous voulez que le système planifie: ");
                 Button simpleBtn = new Button("Simple");
                 Button decomposableBtn = new Button("Decomposable");
+                simpleBtn.setStyle("-fx-font-size: 16px; -fx-background-color: white; -fx-background-radius: 25px; -fx-border-color: #2F80ED; -fx-border-radius: 25; -fx-min-width: 150px;");
+                decomposableBtn.setStyle("-fx-font-size: 16px; -fx-background-color: white; -fx-background-radius: 25px; -fx-border-color: #2F80ED; -fx-border-radius: 25; -fx-min-width: 150px;");
                 simpleBtn.setOnAction(e -> {
                     try{
                         if(user.getPlanning()==null) throw new PasDePlanning("Vous n'avez initialiser aucun Planning");
@@ -453,7 +456,9 @@ public class Planning implements Serializable {
                 });
                 HBox buttonsBox = new HBox(simpleBtn, decomposableBtn);
                 buttonsBox.setSpacing(10);
-                Scene scene = new Scene(buttonsBox, 300, 100);
+                buttonsBox.setAlignment(Pos.CENTER);
+                buttonsBox.setStyle("-fx-background: white;");
+                Scene scene = new Scene(buttonsBox, 400, 100);
                 stage.setScene(scene);
                 stage.showAndWait();
                 stage.setOnCloseRequest(close->{

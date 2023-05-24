@@ -181,7 +181,6 @@ public class User implements Serializable {
                 if (!newValue.isEmpty()) {
                     periodicite[0] = Integer.parseInt(newValue);
                     // Do something with the periodicité value
-                    System.out.println("Périodicité: " + periodicite[0]);
                 }
             });
             tacheSimpleVBox.getChildren().addAll(new Label("Périodicité :"), periodiciteTextField);
@@ -208,8 +207,6 @@ public class User implements Serializable {
             periodiciteTextField.textProperty().addListener((observable, oldValue, newValue) -> {
                 if (!newValue.isEmpty()) {
                     nbrdeDecompo[0] = Integer.parseInt(newValue);
-                    // Do something with the periodicité value
-                    System.out.println("nbr de décompo:  " + nbrdeDecompo[0]);
                 }
             });
             tacheSimpleVBox.getChildren().addAll(new Label("Décomposer sur combien? :"), periodiciteTextField);
@@ -315,8 +312,6 @@ public class User implements Serializable {
             periodiciteTextField.textProperty().addListener((observable, oldValue, newValue) -> {
                 if (!newValue.isEmpty()) {
                     periodicite[0] = Integer.parseInt(newValue);
-                    // Do something with the periodicité value
-                    System.out.println("Périodicité: " + periodicite[0]);
                 }
             });
             tacheSimpleVBox.getChildren().addAll(new Label("Périodicité :"), periodiciteTextField);
@@ -505,27 +500,7 @@ public class User implements Serializable {
         return users;
     }
 
-    public static void saveUpdateUsertoFile(User user){
-        ArrayList<User> users = User.loadUsersFromFile(HelloApplication.getFileNameUsers());
-        for (User userO : users) {
-            if (userO.getPseudo().equals(user.getPseudo())) {
-                for(TacheSimple t: user.getPlanning().getTachesaPlanifier()){
-                    System.out.println("les taches: " + t.getNom());
-                }
-                if(userO.getPlanning()!=null){
-                    for(TacheSimple t: user.getPlanning().getTachesaPlanifier()){
-                        System.out.println("les taches: tae user 0 " + t.getNom());
-                    }
-                }
-                users.remove(userO);
-                break;
-            }
-        }
-        users.add(user);
-        User.saveUsersToFile(users, HelloApplication.getFileNameUsers());
-
-    }
-    public static void updateUsersFile(ArrayList<User> modifiedUsers, String fileName) {
+     public static void updateUsersFile(ArrayList<User> modifiedUsers, String fileName) {
         ArrayList<User> existingUsers = loadUsersFromFile(fileName);
 
         // Merge the modifiedUsers into the existingUsers
@@ -590,6 +565,7 @@ public class User implements Serializable {
         Scene scene = new Scene(rootLayout, 400, 200);
         scene.getStylesheets().add(getClass().getResource("/styles/fixer.css").toExternalForm());
         // Handle submit button click
+        submitButton.setStyle("-fx-background-color: black;");
         submitButton.setOnAction(event -> {
             LocalDate startDate = startDatePicker.getValue();
             LocalDate endDate = endDatePicker.getValue();

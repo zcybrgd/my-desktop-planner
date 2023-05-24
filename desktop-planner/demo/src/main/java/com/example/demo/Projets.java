@@ -144,7 +144,6 @@ public class Projets {
             scrollPane.setPrefHeight(400);
             scrollPane.setStyle("-fx-background-color: white;");
             affichageProjetsBox.setStyle("-fx-background-color: white;");
-            scrollPane.setStyle("-fx-background-color: white;");
             affichageProjetsBox.getChildren().add(scrollPane);
 
         }catch(NullPointerException e){e.getMessage();}

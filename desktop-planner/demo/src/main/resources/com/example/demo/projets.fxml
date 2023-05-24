@@ -17,7 +17,6 @@
          </font>
       </Label>
       <Button layoutX="585.0" layoutY="528.0" mnemonicParsing="false" onAction="#nouveauProjet" prefHeight="51.0" prefWidth="272.0" style="-fx-background-color: #FFC0CB; -fx-text-fill: black; -fx-font-size: 16; -fx-padding: 12px 24px; -fx-border-radius: 25px; -fx-border-color: #FF4081; -fx-background-radius: 25px;" text="      Ajouter un Nouveau Projet" />
-      <VBox fx:id="affichageProjetsBox" alignment="CENTER" layoutX="275.0" layoutY="133.0" prefHeight="340.0" prefWidth="574.0" style="-fx-background-color: white; -fx-border-color: white;" />
       <ImageView fitHeight="74.0" fitWidth="94.0" layoutX="707.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true" rotate="-4.4">
          <image>
             <Image url="@icons/projetP.png" />
@@ -31,5 +30,6 @@
             <Image url="@icons/ajouter.png" />
          </image>
       </ImageView>
+      <VBox fx:id="affichageProjetsBox" layoutX="279.0" layoutY="110.0" prefHeight="402.0" prefWidth="543.0" style="-fx-background-color: white;" />
    </children>
 </AnchorPane>
