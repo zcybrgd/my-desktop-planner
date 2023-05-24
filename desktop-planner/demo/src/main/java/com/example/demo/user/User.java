@@ -36,7 +36,7 @@ public class User implements Serializable {
     private String mdp;
     private Planning planning;
     private List<Planning> Historique;
-    private int minTaskPerDay=4; // le minimum des taches requis pour une journée
+    private int minTaskPerDay=1; // le minimum des taches requis pour une journée
 
     public void setMinTaskPerDay(int minTaskPerDay) {
         this.minTaskPerDay = minTaskPerDay;

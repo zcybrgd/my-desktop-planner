@@ -258,7 +258,6 @@ public class Calendrier {
     }
 
     void lesActionsSurLesTaches(TacheSimple tacheSimple){
-        System.out.println("clicked on this task : " + tacheSimple.getNom());
         // Create the dialog window
         Dialog<String> dialog = new Dialog<>();
         dialog.setTitle("Task Options");

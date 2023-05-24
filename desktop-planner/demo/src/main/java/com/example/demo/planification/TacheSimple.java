@@ -110,13 +110,13 @@ public class TacheSimple extends Tache implements Serializable, Comparable<Tache
         if(nbrJourDePeriodicite>0){
             Jour jour = user.getPlanning().chercherJourDansPeriode(this.journee.getDateDuJour());
             while(jour.comparerDates(jour.getDateDuJour(),user.getPlanning().getDateFin())<=0){
+                    jour.incrementerJour(nbrJourDePeriodicite);
                     TacheSimple tachePeriodique = (TacheSimple) this;
                     tachePeriodique.setJournee(jour);
                     user.getPlanning().getTachesaPlanifier().add(tachePeriodique);
                     if(projetAjout.getKey()){
                         projetAjout.getValue().getEnsembleDesTaches().add(tachePeriodique);
                     }
-                jour.incrementerJour(nbrJourDePeriodicite);
             }
         }
     }

@@ -6,7 +6,6 @@ import com.example.demo.user.User;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Stats {
@@ -21,7 +20,6 @@ public class Stats {
             int vGoodCount = 0;
             int excellentCount = 0;
             for (Badge badge : badges) {
-                System.out.println("on est dans la boucle pour afficher les badges: " + badge.getBadgeLabel());
                 String badgeType = badge.getBadgeLabel();
                 if (badgeType.equals("Good")) {
                     goodCount++;
@@ -35,10 +33,21 @@ public class Stats {
             Good.setText(goodCount + " Good Badges");
             VGood.setText(vGoodCount + " Very Good Badges");
             Excellent.setText(excellentCount + " Excellent Badges");
+
+            List<Jour> jours = this.user.getPlanning().getJours();
+            int totalEncouragement = 0;
+
+            for (Jour jour : jours) {
+                totalEncouragement += jour.getEncouragement();
+            }
+
+            nbrdesEncouragements.setText(totalEncouragement + "");
         }catch(NullPointerException e){e.getMessage();}
 
     }
 
+    @FXML
+    private Label nbrdesEncouragements;
 
     @FXML
     private Label Excellent;
