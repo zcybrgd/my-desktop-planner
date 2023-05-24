@@ -278,7 +278,9 @@ public class Calendrier {
             if (dialogButton == evaluerButton) {
                 tacheSimple.evaluerTache(user);
                 AfficherTasks();
-                modifierNbrTachesDeLaJournee(tacheSimple);
+                if(tacheSimple.getStateDeTache()==EtatTache.completed){
+                    modifierNbrTachesDeLaJournee(tacheSimple);
+                }
             } else if (dialogButton == renommerButton) {
                 tacheSimple.changerNom(user);
                 AfficherTasks();

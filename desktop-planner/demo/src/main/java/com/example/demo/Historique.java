@@ -204,7 +204,7 @@ public class Historique {
 
 
             // Iterate over the projects and create buttons
-            for (Projet projet : user.getPlanning().getUserProjects()) {
+            for (Projet projet : planning.getUserProjects()) {
                 // Create a button for the project
                 Button projectButton = new Button(projet.getNom());
                 projectButton.setPrefWidth(280);
