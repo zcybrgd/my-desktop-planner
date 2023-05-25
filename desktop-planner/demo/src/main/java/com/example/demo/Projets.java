@@ -85,7 +85,6 @@ public class Projets {
             // Perform your actions with the new project data
             String projectName = projectData.getNom();
             String projectDescription = projectData.getDescription();
-            System.out.println("New project created: " + projectName + ", Description: " + projectDescription);
             Projet nvProjet = new Projet(projectName, projectDescription);
             user.creerProjet(nvProjet);
             // After creating a new project, update the label
