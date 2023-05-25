@@ -74,10 +74,6 @@ public class TacheSimple extends Tache implements Serializable, Comparable<Tache
     private Creneau creneauDeTache;
     private Jour journee;
 
-    public Creneau getCreneauDeTache() {
-        return creneauDeTache;
-    }
-
     public TacheSimple(String nom, Duration duree, Prio priorite, LocalDate deadline, Categorie categorie, int nbrJourDePeriodicite){
         super(nom, priorite, deadline, categorie);
         this.nbrJourDePeriodicite = nbrJourDePeriodicite;
@@ -92,6 +88,15 @@ public class TacheSimple extends Tache implements Serializable, Comparable<Tache
         super(duree);
     }
 
+    /**les getters et les setters**/
+
+    public Creneau getCreneauDeTache() {
+        return creneauDeTache;
+    }
+    public void setCreneauDeTache(Creneau creneauDeTache) {
+        this.creneauDeTache = creneauDeTache;
+    }
+
     public void setJournee(Jour journee) {
         this.journee = journee;
     }
@@ -100,7 +105,6 @@ public class TacheSimple extends Tache implements Serializable, Comparable<Tache
         return journee;
     }
 
-    // dans un seul créneau
     public void planifierTache(User user, Pair<Boolean, Projet> projetAjout){
         user.getPlanning().getTachesaPlanifier().add(this);
         if(projetAjout.getKey()){
@@ -144,10 +148,6 @@ public class TacheSimple extends Tache implements Serializable, Comparable<Tache
             user.getPlanning().getTachesaPlanifier().add(this);
             // Perform the desired action with the selected evaluation
         });
-    }
-
-    public void setCreneauDeTache(Creneau creneauDeTache) {
-        this.creneauDeTache = creneauDeTache;
     }
 
 }

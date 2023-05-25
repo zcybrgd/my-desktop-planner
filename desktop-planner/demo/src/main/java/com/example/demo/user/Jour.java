@@ -74,12 +74,12 @@ public class Jour implements Serializable, Comparable<Jour> {
                 Creneau creneau = creneaux.get(i);
                 System.out.println( creneau.getHeureDebut() +" - " + creneau.getHeureFin());
                 if (creneau.calculerDuree().compareTo(duration) >= 0) {
-                    return new Pair<>(jour, new Pair<>(creneau.substituteDuration(duration), i)); // Found a free time slot
+                    return new Pair<>(jour, new Pair<>(creneau.substituteDuration(duration), i)); // a trouvé un créneau
                 }
             }
         }
 
-        return null; // No free time slot found
+        return null; // pas de créneau trouvé
     }
     public static Pair<Jour, Pair<Creneau, Integer>> rechercherCreneauLibreDecompo(User user, Duration duration, LocalDate deadline) {
         for (Jour jour : user.getPlanning().getJours()) {
@@ -91,12 +91,12 @@ public class Jour implements Serializable, Comparable<Jour> {
                 Creneau creneau = creneaux.get(i);
                 if (creneau.isEstLibre()) {
                     creneau.setEstLibre(false);
-                    return new Pair<>(jour, new Pair<>(creneau, i)); // Found a free time slot
+                    return new Pair<>(jour, new Pair<>(creneau, i)); // j'ai trouvé un créneau
                 }
             }
         }
 
-        return null; // No free time slot found
+        return null; // on a pas trouver un créneau
     }
 
 
@@ -204,9 +204,3 @@ public class Jour implements Serializable, Comparable<Jour> {
 
 
 }
-
-
-    // ajouter une tâche à un créneau libre de la journée
-
-    // evaluerJour()
-

@@ -64,7 +64,7 @@ public class Creneau implements Decomposable, Serializable, Comparable<Creneau> 
         return horairesPossibles;
     }
 
-    // les getters et les setters
+    /** les getters et les setters**/
     public void setEstLibre(boolean estLibre) {
         this.estLibre = estLibre;
     }
@@ -89,16 +89,6 @@ public class Creneau implements Decomposable, Serializable, Comparable<Creneau> 
         estLibre = false;
     }
 
-    public boolean inclusDans(Creneau creneau1, Creneau creneau2) {
-        return creneau1.getHeureDebut().compareTo(creneau2.getHeureDebut()) >= 0 &&
-                creneau1.getHeureFin().compareTo(creneau2.getHeureFin()) <= 0;
-    }
-    public boolean creneauChevauche(Creneau creneau1, Creneau creneau2) {
-        return creneau1.getHeureDebut().compareTo(creneau2.getHeureFin()) <= 0 &&
-                creneau2.getHeureDebut().compareTo(creneau1.getHeureFin()) <= 0;
-    }
-
-    // return Duration de la tache;
     public void decomposer(Pair<Creneau, Integer> creneauChoisi, List<Creneau> creneauxDeLaJournee){
         Creneau creneauaDecomposer = creneauxDeLaJournee.get(creneauChoisi.getValue());
         LocalTime heureDebutCreneau = creneauaDecomposer.getHeureDebut();

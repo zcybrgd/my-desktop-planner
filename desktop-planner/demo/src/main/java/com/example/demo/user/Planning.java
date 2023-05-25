@@ -1,7 +1,6 @@
 package com.example.demo.user;
 
 import com.example.demo.Exceptions.PasDePlanning;
-import com.example.demo.enumerations.EtatTache;
 import com.example.demo.planification.Creneau;
 import com.example.demo.planification.Tache;
 import com.example.demo.planification.TacheDecomposable;
@@ -29,10 +28,7 @@ public class Planning implements Serializable {
     private LocalDate dateDebut;
     private LocalDate dateFin;
     private Pair<LocalDate, LocalDate> periode;
-
-
     private List<Badge> lesBadges = new ArrayList<>();
-
 
     public void addBadge(Badge badge) {
         lesBadges.add(badge);
@@ -87,13 +83,9 @@ public class Planning implements Serializable {
     public LocalDate getDateFin() {
         return dateFin;
     }
-
-    // replanifier() // replanifier les taches
-
     public Pair<LocalDate, LocalDate> getPeriode() {
         return new Pair<>(getDateDebut(), getDateFin());
     }
-
 
     public LocalDate choisirDateDansPeriode() {
         DatePicker datePicker = new DatePicker();
@@ -182,7 +174,6 @@ public class Planning implements Serializable {
                 return null;
             }
             // Vérifier que la date recherchée est dans la période donnée
-
             // Rechercher le jour correspondant à la date
             for (Jour jour : this.jours) {
                 if (jour.getDateDuJour().isEqual(date)) {

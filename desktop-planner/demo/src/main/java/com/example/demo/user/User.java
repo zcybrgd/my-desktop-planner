@@ -38,20 +38,7 @@ public class User implements Serializable {
     private List<Planning> Historique;
     private int minTaskPerDay=1; // le minimum des taches requis pour une journée
 
-    public void setMinTaskPerDay(int minTaskPerDay) {
-        this.minTaskPerDay = minTaskPerDay;
-    }
-
-    public int getMinTaskPerDay() {
-        return minTaskPerDay;
-    }
-
-
-    private Duration minDureeCreneau=Duration.ofMinutes(30);;
-
-    public void setMinDureeCreneau(Duration minDureeCreneau) {
-        this.minDureeCreneau = minDureeCreneau;
-    }
+    private Duration minDureeCreneau=Duration.ofMinutes(30);
 
     public User(String pseudo, String mdp){
         this.pseudo = pseudo;
@@ -70,7 +57,6 @@ public class User implements Serializable {
        this.getPlanning().getUserProjects().add(nvProjet);
    }
 
-    // supprimerProjet()
     public void modifierProjet(Projet projet){
         // Create a new stage for modifying the project
         Stage modifyStage = new Stage();
@@ -104,42 +90,42 @@ public class User implements Serializable {
         modifyStage.setScene(scene);
         modifyStage.show();
     }
-    // LocalTime dureeCat(), la durée du temps passé sur les taches d'une catégorie
 
     public static Pair<Boolean, User> seConnecter(String username, String password) {
-        // récupérer les utilisateurs de l'application
+        /**récupérer les utilisateurs de l'application**/
         ArrayList<User> users = loadUsersFromFile(HelloApplication.getFileNameUsers());
         for (User user : users) {
             if (user.getPseudo().equals(username) && user.getMdp().equals(password)) {
-                return new Pair<>(true, user); // un utilisateur existe avec ce username et ce mot de passe
+                return new Pair<>(true, user); /** un utilisateur existe avec ce username et ce mot de passe**/
             }
         }
-        return new Pair<>(false, null); // y a aucun utilisateur qui existe
+        return new Pair<>(false, null); /** y a aucun utilisateur qui existe**/
     }
+
 
 
     public static boolean creerCompte(String username, String password) {
         ArrayList<User> users = loadUsersFromFile(HelloApplication.getFileNameUsers());
         for (User user : users) {
             if (user.getPseudo().equals(username)) {
-                return false; // Le nom d'utilisateur est déjà pris
+                return false; /** Le nom d'utilisateur est déjà pris**/
             }
         }
         User newUser = new User(username, password);
         users.add(newUser);
         saveUsersToFile(users, HelloApplication.getFileNameUsers());
-        return true; // Le compte a été créé avec succès
+        return true; /** Le compte a été créé avec succès**/
     }
 
-    // pour fixer la période de ce planning
+    /**traitement des exceptions pour fixer la période de ce planning**/
     public Planning fixerPlanning(LocalDate dateDebut, LocalDate dateFin) throws DateAnterieure {
         LocalDate dateActuelle = LocalDate.now();
 
-        // Vérifier que la date de début est supérieure ou égale à la date actuelle
+        /** Vérifier que la date de début est supérieure ou égale à la date actuelle**/
         if (dateDebut.isBefore(dateActuelle)) {
             throw new DateAnterieure("La date de début ne peut pas être antérieure à la date actuelle.");
         }
-        // Vérifier que la date de fin est supérieure ou égale à la date de début
+        /** Vérifier que la date de fin est supérieure ou égale à la date de début**/
         if (dateFin.isBefore(dateDebut)) {
             throw new IllegalArgumentException("La date de fin ne peut pas être antérieure à la date de début.");
         }
@@ -147,6 +133,7 @@ public class User implements Serializable {
         return nouveauPlanning;
     }
 
+    /**introduire une tache manuelle**/
     public void introduireUneTacheManuelle(Tache tache, String type, Pair<Creneau, Integer> creneauChoisi, Jour journeeChoisie, User user, Pair<Boolean, Projet> projetAjout) {
         // Create the fields for entering task data
         final int[] periodicite = {0};
@@ -176,11 +163,10 @@ public class User implements Serializable {
                         return null;
                     }));
 
-            // Listener to retrieve the periodicité value
+            // Listener to retrieve la periodicité value
             periodiciteTextField.textProperty().addListener((observable, oldValue, newValue) -> {
                 if (!newValue.isEmpty()) {
                     periodicite[0] = Integer.parseInt(newValue);
-                    // Do something with the periodicité value
                 }
             });
             tacheSimpleVBox.getChildren().addAll(new Label("Périodicité :"), periodiciteTextField);
@@ -280,6 +266,7 @@ public class User implements Serializable {
             }
         });
     }
+    /**introduire une tache automatique**/
     public void introduireUneTacheAuto(Tache tache, String type, User user, Pair<Boolean, Projet> projetAjout) {
         // Create the fields for entering task data
         final int[] periodicite = {0};
@@ -445,14 +432,10 @@ public class User implements Serializable {
                                 }else{
 
                                     if (!tachedeco.getCreneauxDeTache().containsKey(planifier.getKey())) {
-                                        // If jourP is not in the map, create a new ArrayList with creneauP
                                         ArrayList<Pair<Creneau, Integer>> creneauxList = new ArrayList<>();
                                         creneauxList.add(planifier.getValue());
-
-                                        // Add jourP and the ArrayList to the map
                                         tachedeco.getCreneauxDeTache().put(planifier.getKey(), creneauxList);
                                     } else {
-                                        // If jourP is already in the map, retrieve the existing ArrayList and add creneauP to it
                                         ArrayList<Pair<Creneau, Integer>> creneauxList = tachedeco.getCreneauxDeTache().get(planifier.getKey());
                                         creneauxList.add(planifier.getValue());
                                     }
@@ -480,7 +463,7 @@ public class User implements Serializable {
             }
         });
     }
-    // sauvegarder les utilisateurs dans le fichier
+    /**sauvegarder les utilisateurs dans le fichier**/
     public static void saveUsersToFile(ArrayList<User> users, String fileName) {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName))) {
             oos.writeObject(users);
@@ -489,7 +472,7 @@ public class User implements Serializable {
         }
 
     }
-    // récuperer les utilisateurs de l'application de ce fichier binaire
+    /**récuperer les utilisateurs de l'application de ce fichier binaire**/
     public static ArrayList<User> loadUsersFromFile(String fileName) {
         ArrayList<User> users = new ArrayList<>();
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileName))) {
@@ -500,6 +483,7 @@ public class User implements Serializable {
         return users;
     }
 
+    /**sauvegarder les données et les changements de l'utilisateur avant de quitter l'application**/
      public static void updateUsersFile(ArrayList<User> modifiedUsers, String fileName) {
         ArrayList<User> existingUsers = loadUsersFromFile(fileName);
 
@@ -514,11 +498,11 @@ public class User implements Serializable {
                 }
             }
         }
-        // Save the updated users to the file
+        /** Save the updated users to the file **/
         saveUsersToFile(existingUsers, fileName);
     }
 
-    // validerPlanning()
+  /**pour valider le planning choisi par l'utilisateur**/
     public boolean confirmerNouvellePeriode() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmation");
@@ -532,13 +516,15 @@ public class User implements Serializable {
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ouiButton){
-            // Si l'utilisateur clique sur "Oui", on retourne true pour indiquer que l'utilisateur veut fixer une nouvelle période.
+            /** Si l'utilisateur clique sur "Oui", on retourne true pour indiquer que l'utilisateur veut fixer une nouvelle période.**/
             return true;
         } else {
-            // Sinon, on retourne false pour indiquer que l'utilisateur ne veut pas fixer une nouvelle période.
+            /** Sinon, on retourne false pour indiquer que l'utilisateur ne veut pas fixer une nouvelle période.**/
             return false;
         }
     }
+
+    /**fixer une nouvelle période pour le planning, choisir une date début et date fin avec traitement des exceptions**/
     public Scene fixerUneNouvellePériode(User user){
         Font robotoRegular = Font.loadFont(getClass().getResourceAsStream("/fonts/Roboto/Roboto-Regular.ttf"), 16);
         // Create form elements
@@ -605,7 +591,7 @@ public class User implements Serializable {
         return scene;
     }
 
-    // les getters et les setters
+    /**les getters et les setters**/
     public Planning getPlanning() {
         return planning;
     }
@@ -631,5 +617,15 @@ public class User implements Serializable {
 
     public void setHistorique(List<Planning> historique) {
         Historique = historique;
+    }
+    public void setMinTaskPerDay(int minTaskPerDay) {
+        this.minTaskPerDay = minTaskPerDay;
+    }
+
+    public int getMinTaskPerDay() {
+        return minTaskPerDay;
+    }
+    public void setMinDureeCreneau(Duration minDureeCreneau) {
+        this.minDureeCreneau = minDureeCreneau;
     }
 }
