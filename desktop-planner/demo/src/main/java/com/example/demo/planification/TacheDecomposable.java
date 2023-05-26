@@ -19,6 +19,7 @@ public class TacheDecomposable extends Tache implements Decomposable, Serializab
     public TacheDecomposable(Duration duree){
         super(duree);
     }
+    public TacheDecomposable(){}
     private Set<TacheSimple> sousTaches = new TreeSet<>();
 
     public Set<TacheSimple> getSousTaches() {
@@ -48,7 +49,6 @@ public class TacheDecomposable extends Tache implements Decomposable, Serializab
         return creneauxDeTache;
     }
 
-    public TacheDecomposable(){}
     public void decomposer(int nbrDecompo, User user){
         if(nbrDecompo!=0){
             for(int i = 0;i<nbrDecompo;i++){

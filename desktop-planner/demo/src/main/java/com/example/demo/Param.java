@@ -11,6 +11,8 @@ import javafx.scene.paint.Color;
 import java.time.Duration;
 import java.time.format.DateTimeParseException;
 
+
+/**le controlleur de l'interface des parametres**/
 public class Param {
     private User user;
 
@@ -30,6 +32,7 @@ public class Param {
     @FXML
     private TextField minTasksField;
 
+    /**Ajouter une nouvelle categorie et sa couleur**/
     @FXML
     void AjouterNvlCat(ActionEvent event) {
         String categoryName = categoryTextField.getText();
@@ -43,6 +46,8 @@ public class Param {
         categoryColorPicker.setValue(null);
     }
 
+
+    /**modifier la durée minimale**/
     @FXML
     void modifierDurMini(ActionEvent event) {
         String input = minDurationTextField.getText();
@@ -53,10 +58,9 @@ public class Param {
             user.setMinDureeCreneau(duration);
         } catch (DateTimeParseException e) {
             System.out.println("Invalid duration");
-            // Display an error message or handle the invalid input
         }
     }
-
+  /**modifier la durée minimale des taches par journée **/
     @FXML
     void modifierMinTask(ActionEvent event) {
         String input = minTasksField.getText();
@@ -66,7 +70,6 @@ public class Param {
             user.setMinTaskPerDay(minTasks);
         } catch (NumberFormatException e) {
             System.out.println("Invalid min tasks");
-            // Display an error message or handle the invalid input
         }
     }
 

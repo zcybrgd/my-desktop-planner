@@ -8,14 +8,27 @@ import javafx.scene.control.Label;
 
 import java.util.List;
 
+
+/**les statistiques**/
 public class Stats {
     private User user;
+    @FXML
+    private Label nbrdesEncouragements;
+
+    @FXML
+    private Label Excellent;
+
+    @FXML
+    private Label Good;
+
+    @FXML
+    private Label VGood;
 
     public void setUser(User user) {
         this.user = user;
         try{
             List<Badge> badges = this.user.getPlanning().getBadges();
-            // Count the occurrences of each badge type
+            // compter les occurrences de chaque type de badge
             int goodCount = 0;
             int vGoodCount = 0;
             int excellentCount = 0;
@@ -29,7 +42,7 @@ public class Stats {
                     excellentCount++;
                 }
             }
-           // Update the label texts with the badge counts
+           // mise à jour des labels sur l'interface
             Good.setText(goodCount + " Good Badges");
             VGood.setText(vGoodCount + " Very Good Badges");
             Excellent.setText(excellentCount + " Excellent Badges");
@@ -45,16 +58,4 @@ public class Stats {
         }catch(NullPointerException e){e.getMessage();}
 
     }
-
-    @FXML
-    private Label nbrdesEncouragements;
-
-    @FXML
-    private Label Excellent;
-
-    @FXML
-    private Label Good;
-
-    @FXML
-    private Label VGood;
 }

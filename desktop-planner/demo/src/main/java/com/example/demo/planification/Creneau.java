@@ -127,8 +127,6 @@ public class Creneau implements Decomposable, Serializable, Comparable<Creneau> 
                 totalDuration = totalDuration.plus(creneau.calculerDuree());
             }
         }
-
-        System.out.println("Total Duration: " + totalDuration);
         return totalDuration;
     }
 }

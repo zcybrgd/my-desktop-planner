@@ -33,6 +33,9 @@ public class Projets {
     @FXML
     private Label cptProjets;
 
+
+    /**créer un nouveau projet**/
+
     @FXML
     void nouveauProjet(ActionEvent event) {
         Dialog<Projet> dialog = new Dialog<>();
@@ -82,7 +85,6 @@ public class Projets {
         // Show the dialog and wait for user input
         Optional<Projet> result = dialog.showAndWait();
         result.ifPresent(projectData -> {
-            // Perform your actions with the new project data
             String projectName = projectData.getNom();
             String projectDescription = projectData.getDescription();
             Projet nvProjet = new Projet(projectName, projectDescription);
@@ -92,8 +94,9 @@ public class Projets {
             AffichageProjects();
         });
     }
+
+    /**mettre à jour le nombre des projets quand on ajoute un nouveau projet**/
     private void updateCptProjets() {
-        // Perform your conditions to determine the value of cptProjets
         int numberOfProjects = 0;
         try{
             if(user.getPlanning().getUserProjects()!=null && user.getPlanning().getUserProjects().size()>0){
@@ -101,19 +104,15 @@ public class Projets {
                 // Update the label text
                 cptProjets.setText("Vous avez " + numberOfProjects + " projets pour le moment");
             }
-        }catch(NullPointerException e){System.out.println(e.getMessage());}
+        }catch(NullPointerException e){System.out.println("ya pas de projets, ya meme pas un planning courant, veuillez fixer un planning dans la page Calendrier");}
     }
     void AffichageProjects(){
         try{
-            // Assuming you have an ArrayList<Projet> named projects
-            // Create a VBox to hold the project buttons
             VBox projectBox = new VBox();
             projectBox.setSpacing(35);
             projectBox.setAlignment(Pos.CENTER);
             projectBox.setStyle("-fx-background-color: white;");
             // Create a ScrollPane to contain the VBox
-
-
             // Iterate over the projects and create buttons
             for (Projet projet : user.getPlanning().getUserProjects()) {
                 // Create a button for the project
@@ -245,7 +244,6 @@ public class Projets {
         VBox dialogContent = new VBox();
         dialogContent.setSpacing(10);
 
-        // Handle Evaluer Tache button
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == evaluerButton) {
                 tacheSimple.evaluerTache(user);

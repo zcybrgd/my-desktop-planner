@@ -21,9 +21,16 @@ public abstract class Tache implements Serializable {
     protected LocalDate deadline;
     protected Categorie categorie;
     protected EtatTache stateDeTache=EtatTache.notRealized;
-
-  // peuvent etre pour la périodicité pour les taches simples et les jours des taches composées
     protected Set<Jour> journees = new TreeSet<>();
+    public Tache(Duration duree){
+        this.duree = duree;
+    }
+    public Tache(String nom, Prio priorite, LocalDate deadline, Categorie categorie){
+        this.nom = nom;
+        this.priorite = priorite;
+        this.deadline = deadline;
+        this.categorie = categorie;
+    }
 
     public Set<Jour> getJournees() {
         return journees;
@@ -64,15 +71,6 @@ public abstract class Tache implements Serializable {
     // et le nouveau deadline si jamais elle en possède un.
     abstract void replanifierTache(User user);
     abstract void evaluerTache(User user);
-    public Tache(Duration duree){
-        this.duree = duree;
-    }
-    public Tache(String nom, Prio priorite, LocalDate deadline, Categorie categorie){
-      this.nom = nom;
-      this.priorite = priorite;
-      this.deadline = deadline;
-      this.categorie = categorie;
-    }
 
     public void setNom(String nom) {
         this.nom = nom;

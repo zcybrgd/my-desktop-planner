@@ -299,7 +299,6 @@ public class Planning implements Serializable {
                 });
 
                 decomposableBtn.setOnAction(e -> {
-                    // code to handle the decomposable task goes here
                     try{
                         if(user.getPlanning()==null) throw new PasDePlanning("Vous n'avez initialiser aucun Planning");
                         // Create a dialog box for entering the duration
@@ -406,7 +405,6 @@ public class Planning implements Serializable {
                     }
                 });
                 decomposableBtn.setOnAction(e -> {
-                    // code to handle the decomposable task goes here
                     try{
                         if(user.getPlanning()==null) throw new PasDePlanning("Vous n'avez initialiser aucun Planning");
                         // Create a dialog box for entering the duration

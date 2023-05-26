@@ -36,6 +36,7 @@ public class Historique {
     }
     @FXML
     private AnchorPane afficherHisto;
+    /**quand il n'ya pas de historique**/
     void AfficherNoHistory(){
         Label promptLabel = new Label("Il n'y a pas d'historique dans cette application");
         promptLabel.setStyle("-fx-font-family: Arial; -fx-font-size: 24px;");
@@ -45,6 +46,7 @@ public class Historique {
         AnchorPane.setRightAnchor(promptLabel, 20.0);
         afficherHisto.getChildren().add(promptLabel);
     }
+    /**Affichage de l'historique**/
     void AfficherHistorique(){
         List<Planning> historique = user.getHistorique();
 
@@ -76,6 +78,7 @@ public class Historique {
         }
 
     }
+    /**afficher les infos d'un ancien planning, ses taches, ses badges, ses projets**/
     void AfficherDataofOldPlanning(Planning planning){
         // Create a new stage
         Stage newStage = new Stage();
@@ -113,10 +116,10 @@ public class Historique {
         // Show the stage
         newStage.show();
     }
+    /**Afficher ancien taches d'un planning**/
     void AfficherAncienTasks(Planning planning){
         if(planning!=null){
             Set<TacheSimple> tacheSimpleSet = planning.getTachesaPlanifier();
-            // Clear the existing buttons
             // Create a VBox to contain the task buttons
             VBox taskBoxContainer = new VBox(10);
             taskBoxContainer.setStyle("-fx-background-color: white;");
@@ -192,6 +195,7 @@ public class Historique {
             System.out.println("ya pas de planning");
         }
     }
+    /**Afficher ancien projets d'un planning**/
     void AfficherAncienProjets(Planning planning){
         try{
             // Assuming you have an ArrayList<Projet> named projects
@@ -201,8 +205,6 @@ public class Historique {
             projectBox.setAlignment(Pos.CENTER);
             projectBox.setStyle("-fx-background-color: white;");
             // Create a ScrollPane to contain the VBox
-
-
             // Iterate over the projects and create buttons
             for (Projet projet : planning.getUserProjects()) {
                 // Create a button for the project
@@ -236,6 +238,7 @@ public class Historique {
         }catch(NullPointerException e){e.getMessage();}
 
     }
+    /**Affichage d'un projet dans la fenetre des anciens projets d'un planning**/
     void AfficherProjet(Projet projet){
         Stage taskStage = new Stage();
         VBox taskBox = new VBox(10);

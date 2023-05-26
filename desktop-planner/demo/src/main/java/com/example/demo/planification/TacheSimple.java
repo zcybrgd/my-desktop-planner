@@ -19,60 +19,14 @@ import java.util.Set;
 
 public class TacheSimple extends Tache implements Serializable, Comparable<TacheSimple> {
 
-    public TacheSimple() {
-        // Default constructor required for deserialization
-    }
-
-    public void changerNom(User user){
-        // Create the text input dialog for new name entry
-        TextInputDialog inputDialog = new TextInputDialog();
-        inputDialog.setTitle("Renommer la tache");
-        inputDialog.setHeaderText("Entrer un nouveau nom pour votre tache");
-        inputDialog.setContentText("Le nouveau nom:");
-
-        // Show the text input dialog and get the entered name
-        Optional<String> result = inputDialog.showAndWait();
-        result.ifPresent(newName -> {
-            // Perform the desired action with the entered new name
-            this.setNom(newName);
-            user.getPlanning().getTachesaPlanifier().add(this);
-        });
-    }
-
-
-
-    public int compareTo(TacheSimple other) {
-        Jour thisJour = this.getJournee();
-        Jour otherJour = other.getJournee();
-
-        if (thisJour == null && otherJour == null) {
-            return 0;
-        } else if (thisJour == null) {
-            return -1;
-        } else if (otherJour == null) {
-            return 1;
-        }
-
-        int jourComparison = thisJour.compareTo(otherJour);
-        if (jourComparison != 0) {
-            return jourComparison;
-        } else {
-            Creneau thisCreneau = this.getCreneauDeTache();
-            Creneau otherCreneau = other.getCreneauDeTache();
-            return thisCreneau.compareTo(otherCreneau);
-        }
-    }
-
-
-    public void setNbrJourDePeriodicite(int nbrJourDePeriodicite) {
-        this.nbrJourDePeriodicite = nbrJourDePeriodicite;
-    }
-
     // ces tachesSimples peuvent être périodiques (planifiées tous les n jours).
     //si n = 0 , la tâche n'est planifiée qu'une fois.
     private int nbrJourDePeriodicite;
     private Creneau creneauDeTache;
     private Jour journee;
+    public TacheSimple() {
+        // Default constructor required for deserialization
+    }
 
     public TacheSimple(String nom, Duration duree, Prio priorite, LocalDate deadline, Categorie categorie, int nbrJourDePeriodicite){
         super(nom, priorite, deadline, categorie);
@@ -104,6 +58,10 @@ public class TacheSimple extends Tache implements Serializable, Comparable<Tache
     public Jour getJournee() {
         return journee;
     }
+    public void setNbrJourDePeriodicite(int nbrJourDePeriodicite) {
+        this.nbrJourDePeriodicite = nbrJourDePeriodicite;
+    }
+
 
     public void planifierTache(User user, Pair<Boolean, Projet> projetAjout){
         user.getPlanning().getTachesaPlanifier().add(this);
@@ -124,6 +82,42 @@ public class TacheSimple extends Tache implements Serializable, Comparable<Tache
             }
         }
     }
+    public int compareTo(TacheSimple other) {
+        Jour thisJour = this.getJournee();
+        Jour otherJour = other.getJournee();
+
+        if (thisJour == null && otherJour == null) {
+            return 0;
+        } else if (thisJour == null) {
+            return -1;
+        } else if (otherJour == null) {
+            return 1;
+        }
+
+        int jourComparison = thisJour.compareTo(otherJour);
+        if (jourComparison != 0) {
+            return jourComparison;
+        } else {
+            Creneau thisCreneau = this.getCreneauDeTache();
+            Creneau otherCreneau = other.getCreneauDeTache();
+            return thisCreneau.compareTo(otherCreneau);
+        }
+    }
+    public void changerNom(User user){
+        // Create the text input dialog for new name entry
+        TextInputDialog inputDialog = new TextInputDialog();
+        inputDialog.setTitle("Renommer la tache");
+        inputDialog.setHeaderText("Entrer un nouveau nom pour votre tache");
+        inputDialog.setContentText("Le nouveau nom:");
+
+        // Show the text input dialog and get the entered name
+        Optional<String> result = inputDialog.showAndWait();
+        result.ifPresent(newName -> {
+            this.setNom(newName);
+            user.getPlanning().getTachesaPlanifier().add(this);
+        });
+    }
+
     public void replanifierTache(User user){
         user.getPlanning().getTachesaPlanifier().remove(this);
         LocalDate dateDejourneeChoisie = user.getPlanning().choisirDateDansPeriode();
@@ -146,7 +140,6 @@ public class TacheSimple extends Tache implements Serializable, Comparable<Tache
         result.ifPresent(etatTache -> {
             this.setStateDeTache(etatTache);
             user.getPlanning().getTachesaPlanifier().add(this);
-            // Perform the desired action with the selected evaluation
         });
     }
 

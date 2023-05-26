@@ -15,11 +15,9 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.io.Serializable;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Optional;
-import java.util.ResourceBundle;
+
 
 public class SideBar {
 
@@ -104,9 +102,6 @@ public class SideBar {
         }));
         logoutButton.setOnAction(logout->{
             Stage currentStage = (Stage) logoutButton.getScene().getWindow();
-            // Close the current window
-            /***/
-            // Show confirmation alert
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Sauvegarder votre activité dans l'application");
             alert.setHeaderText("Voulez-vous sauvegarder avant de quitter l'application?");
@@ -121,7 +116,6 @@ public class SideBar {
                 modified.add(utilisateur);
                 User.updateUsersFile(modified,HelloApplication.getFileNameUsers());
             }
-            /***/
             Stage primaryStage = new Stage();
             primaryStage.setTitle("User Login");
             currentStage.close();

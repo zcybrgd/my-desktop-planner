@@ -124,7 +124,6 @@ public class loginpage  {
                             alert.getButtonTypes().setAll(saveButton, cancelButton);
                             Optional<ButtonType> result = alert.showAndWait();
                             if (result.get() == saveButton) {
-                               // User.saveUpdateUsertoFile(controller.getUtilisateur());
                                 ArrayList<User> modified = new ArrayList<>();
                                 modified.add(controller.getUtilisateur());
                                 User.updateUsersFile(modified,HelloApplication.getFileNameUsers());

@@ -65,7 +65,6 @@ public class Projet implements Serializable {
 
         Optional<EtatTache> result = choiceDialog.showAndWait();
         result.ifPresent(etatTache -> {
-            System.out.println("Selected evaluation: " + etatTache);
             this.setStateDeTache(etatTache);
         });
     }

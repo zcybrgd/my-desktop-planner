@@ -121,10 +121,10 @@ public class Calendrier {
         for (Badge badge : user.getPlanning().getBadges()) {
             if (badge.getBadgeLabel().equals("Good")) {
                 goodBadgeCount++;
-                if (goodBadgeCount == 2) { // 3
+                if (goodBadgeCount == 3) {
                     Badge badgeVGood = new Badge("VeryGood");
                     pendingBadges.add(badgeVGood);
-                } else if (goodBadgeCount == 4) { // 6
+                } else if (goodBadgeCount == 6) {
                     Badge badgeE = new Badge("Excellent");
                     pendingBadges.add(badgeE);
                 }
@@ -134,8 +134,6 @@ public class Calendrier {
         // Add the pending badges to the user's planning badges list
         user.getPlanning().getBadges().addAll(pendingBadges);
     }
-
-
 
     void AfficherTasks(){
         if(user.getPlanning()!=null){
@@ -227,6 +225,7 @@ public class Calendrier {
         AfficherTasks();
     }
 
+    /**initialiser le calendrier, affichage des taches**/
     public Scene calendarInit(Stage primaryStage) {
         Scene previousScene = primaryStage.getScene(); // Get the previous scene
         if (user.confirmerNouvellePeriode()) {
@@ -249,13 +248,14 @@ public class Calendrier {
         }
 
         if (user.getPlanning() != null) {
-            System.out.println("periode existante on demande meme pas");
+            System.out.println(".");
         } else {
-            System.out.println("periode non existante mais il a fixer");
+            System.out.println("pas de planning courant, veuillez ajouter un planning");
         }
         return previousScene;
     }
 
+    /**évaluer, renommer ou replanifier la tache**/
     void lesActionsSurLesTaches(TacheSimple tacheSimple){
         // Create the dialog window
         Dialog<String> dialog = new Dialog<>();
@@ -295,6 +295,7 @@ public class Calendrier {
         dialog.showAndWait();
     }
 
+    /**afficher les taches non planifiéees *unscheduled* */
     @FXML
     void affichageUnscheduled(ActionEvent event) {
         Set<Tache> unscheduledTasks = user.getPlanning().getTachesUnscheduled();
