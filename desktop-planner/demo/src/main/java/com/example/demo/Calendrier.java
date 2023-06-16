@@ -84,12 +84,6 @@ public class Calendrier {
             delay.setOnFinished(event -> stage.close());
             // Start the delay
             delay.play();
-            System.out.println("--- Afficher les Badges ---");
-            try{
-                for(Badge badge : user.getPlanning().getBadges()){
-                    System.out.println("Badge: " + badge.getBadgeLabel());
-                }
-            }catch(NullPointerException e){e.getMessage();}
         }
     }
     @FXML

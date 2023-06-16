@@ -198,7 +198,6 @@ public class Historique {
     /**Afficher ancien projets d'un planning**/
     void AfficherAncienProjets(Planning planning){
         try{
-            // Assuming you have an ArrayList<Projet> named projects
             // Create a VBox to hold the project buttons
             VBox projectBox = new VBox();
             projectBox.setSpacing(35);

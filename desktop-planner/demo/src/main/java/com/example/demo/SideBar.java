@@ -144,26 +144,32 @@ public class SideBar {
                 mainPage.getChildren().remove(0);
             }
             mainPage.getChildren().add(0,page); // Add the new page
-            if(fxmlFile.equals("calendrier.fxml")){
-                Calendrier controller = fxmlLoader.getController();
-                controller.setUser(utilisateur);
+            switch (fxmlFile) {
+                case "calendrier.fxml":
+                    Calendrier cc = fxmlLoader.getController();
+                    cc.setUser(utilisateur);
+                    break;
+                case "param.fxml":
+                    Param cp = fxmlLoader.getController();
+                    cp.setUser(utilisateur);
+                    break;
+                case "projets.fxml":
+                    Projets cpr = fxmlLoader.getController();
+                    cpr.setUser(utilisateur);
+                    break;
+                case "stats.fxml":
+                    Stats cs = fxmlLoader.getController();
+                    cs.setUser(utilisateur);
+                    break;
+                case "historique.fxml":
+                    Historique controller = fxmlLoader.getController();
+                    controller.setUser(utilisateur);
+                    break;
+                default:
+                    // Handle the case where fxmlFile does not match any of the specified cases
+                    break;
             }
-            if(fxmlFile.equals("param.fxml")){
-                Param controller = fxmlLoader.getController();
-                controller.setUser(utilisateur);
-            }
-            if(fxmlFile.equals("projets.fxml")){
-                Projets controller = fxmlLoader.getController();
-                controller.setUser(utilisateur);
-            }
-            if(fxmlFile.equals("stats.fxml")){
-                Stats controller = fxmlLoader.getController();
-                controller.setUser(utilisateur);
-            }
-            if(fxmlFile.equals("historique.fxml")){
-                Historique controller = fxmlLoader.getController();
-                controller.setUser(utilisateur);
-            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
