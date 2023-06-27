@@ -107,7 +107,6 @@ public class Jour implements Serializable, Comparable<Jour> {
     }
     public Pair<Creneau, Integer> choisirCreneauDansUneJournee(User user, Jour jourChoisi) {
         List<Creneau> lesCreneauxLibresDuJour = jourChoisi.getCreneaux();
-        // Create a list of strings representing the creneaux
         ListView<Creneau> listView = new ListView<>();
         listView.getItems().addAll(lesCreneauxLibresDuJour);
         listView.setCellFactory(param -> new ListCell<>() {

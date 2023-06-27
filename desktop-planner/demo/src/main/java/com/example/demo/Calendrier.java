@@ -55,7 +55,7 @@ public class Calendrier {
 
     void modifierNbrTachesDeLaJournee(TacheSimple tachesimple){
         List<Jour> jours = user.getPlanning().getJours();
-        Jour targetJour = tachesimple.getJournee();  // The specific Jour object you want to modify
+        Jour targetJour = tachesimple.getJournee();
         int index = jours.indexOf(targetJour);
         if (index != -1) {
             Jour jourToUpdate = jours.get(index);

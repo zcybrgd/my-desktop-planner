@@ -50,8 +50,8 @@ public class Creneau implements Decomposable, Serializable, Comparable<Creneau> 
         LocalTime heure;
         LocalTime heureFin;
         if(creneau == null || creneau.isEmpty()){
-            heure = LocalTime.of(4, 30); // il commence sa journée à 5 AM
-            heureFin = LocalTime.of(23, 30); // il la termine 11 PM
+            heure = LocalTime.of(4, 30); // il commence sa journée
+            heureFin = LocalTime.of(23, 30); // il la termine
         }else{
             heure = creneau.get().getHeureDebut();
             heureFin = creneau.get().getHeureFin().plus(minDureeCreneau);

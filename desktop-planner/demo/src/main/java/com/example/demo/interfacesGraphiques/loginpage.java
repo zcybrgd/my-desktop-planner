@@ -3,7 +3,6 @@ package com.example.demo.interfacesGraphiques;
 
 import com.example.demo.HelloApplication;
 import com.example.demo.SideBar;
-import com.example.demo.planification.TacheSimple;
 import com.example.demo.user.User;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;

@@ -110,8 +110,6 @@ public class Planning implements Serializable {
         VBox root = new VBox(datePicker, btnOk);
         root.setSpacing(20);
         root.setPadding(new Insets(10));
-
-        // appliquer le style CSS directement dans le code Java
         root.setStyle("-fx-background-color: #f5f5f5; -fx-font-size: 14px;");
 
         // afficher une fenêtre avec le date picker et le bouton pour que l'utilisateur puisse sélectionner une date
@@ -346,7 +344,6 @@ public class Planning implements Serializable {
                 stage.setOnCloseRequest(close->{
                     System.out.println("pas de créneau choisi");
                 });
-                // add the buttonsBox to your main layout
                 System.out.println("Planification manuelle choisie");
 
             } else if (selected.equals("Planification automatique")) {

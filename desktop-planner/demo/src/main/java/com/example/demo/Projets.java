@@ -134,8 +134,6 @@ public class Projets {
                 // Add the project button and details to the VBox
                 projectBox.getChildren().add(projectDetailsBox);
             }
-
-           // Set the ScrollPane as the content of your container
             affichageProjetsBox.getChildren().clear();
             ScrollPane scrollPane = new ScrollPane(projectBox);
             scrollPane.setFitToWidth(true);

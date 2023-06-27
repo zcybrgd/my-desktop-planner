@@ -25,7 +25,7 @@ public class TacheSimple extends Tache implements Serializable, Comparable<Tache
     private Creneau creneauDeTache;
     private Jour journee;
     public TacheSimple() {
-        // Default constructor required for deserialization
+        // Default constructor dertou psk its required for deserialization
     }
 
     public TacheSimple(String nom, Duration duree, Prio priorite, LocalDate deadline, Categorie categorie, int nbrJourDePeriodicite){
@@ -134,7 +134,6 @@ public class TacheSimple extends Tache implements Serializable, Comparable<Tache
         choiceDialog.setTitle("Evaluation de la tache");
         choiceDialog.setHeaderText("évaluer la tache");
         choiceDialog.setContentText("Choisissez");
-
         // Show the choice dialog and get the selected evaluation
         Optional<EtatTache> result = choiceDialog.showAndWait();
         result.ifPresent(etatTache -> {

@@ -135,7 +135,6 @@ public class User implements Serializable {
 
     /**introduire une tache manuelle**/
     public void introduireUneTacheManuelle(Tache tache, String type, Pair<Creneau, Integer> creneauChoisi, Jour journeeChoisie, User user, Pair<Boolean, Projet> projetAjout) {
-        // Create the fields for entering task data
         final int[] periodicite = {0};
         final int[] nbrdeDecompo = {0};
         TextField nomTacheTextField = new TextField();
@@ -144,7 +143,6 @@ public class User implements Serializable {
         DatePicker deadlineDatePicker = new DatePicker();
         ComboBox<String> categorieComboBox = new ComboBox<>();
         categorieComboBox.setItems(FXCollections.observableArrayList(Categorie.getCategoryNames()));
-        // If the task is a TacheSimple, add a field for the periodicity
         VBox tacheSimpleVBox = new VBox();
         if (type.equals("Simple")) {
             TextField periodiciteTextField = new TextField();
@@ -162,8 +160,6 @@ public class User implements Serializable {
                         }
                         return null;
                     }));
-
-            // Listener to retrieve la periodicité value
             periodiciteTextField.textProperty().addListener((observable, oldValue, newValue) -> {
                 if (!newValue.isEmpty()) {
                     periodicite[0] = Integer.parseInt(newValue);
@@ -276,7 +272,6 @@ public class User implements Serializable {
         DatePicker deadlineDatePicker = new DatePicker();
         ComboBox<String> categorieComboBox = new ComboBox<>();
         categorieComboBox.setItems(FXCollections.observableArrayList(Categorie.getCategoryNames()));
-        // If the task is a TacheSimple, add a field for the periodicity
         VBox tacheSimpleVBox = new VBox();
         if (type.equals("Simple")) {
             TextField periodiciteTextField = new TextField();
@@ -294,8 +289,6 @@ public class User implements Serializable {
                         }
                         return null;
                     }));
-
-            // Listener to retrieve the periodicité value
             periodiciteTextField.textProperty().addListener((observable, oldValue, newValue) -> {
                 if (!newValue.isEmpty()) {
                     periodicite[0] = Integer.parseInt(newValue);
