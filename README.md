@@ -33,13 +33,12 @@ My Desktop Planner is a task planning application designed to help users effecti
 
 - [JavaFX](https://openjfx.io/) - GUI Library
   <a href="https://openjfx.io/" target="_blank" rel="noreferrer">
-    <img src="https://user-images.githubusercontent.com/25181517/117201156-9a724800-adec-11eb-9a9d-3cd0f67da4bc.png" alt="JavaFX" width="40" height="40"/>
+    <img src="https://user-images.githubusercontent.com/25181517/117201387-0349c080-adee-11eb-83f3-04ff3afae14e.png" alt="JavaFX" width="40" height="40"/>
   </a>
 
-- [CSS](https://developer.mozilla.org/en-US/docs/Web/CSS) - Styling Language
-  <a href="https://developer.mozilla.org/en-US/docs/Web/CSS" target="_blank" rel="noreferrer">
-    <img src="path/to/css-logo.png" alt="CSS" width="40" height="40"/>
-  </a>
+- CSS - Styling Language
+  <img src="https://user-images.githubusercontent.com/25181517/117201575-5aa5df00-adee-11eb-8db0-cac7d4df8d61.png" alt="CSS" width="40" height="40"/>
+
 
 ## Contribution
 The entire assignment PDF can be found in the repository. Since I worked on 90% of the app in less than a week, I might have missed some details, and some aspects may require further improvement. If you want to contribute and practice your OOP and Graphics Interface development skills:
