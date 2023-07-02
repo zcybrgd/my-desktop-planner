@@ -26,25 +26,11 @@ My Desktop Planner is a task planning application designed to help users effecti
 
 ## Development Tools
 
-- [Java](https://www.java.com/) - Programming Language
-  <a href="https://www.java.com/" target="_blank" rel="noreferrer">
-    <img src="https://user-images.githubusercontent.com/25181517/117201156-9a724800-adec-11eb-9a9d-3cd0f67da4bc.png" alt="Java" width="40" height="40"/>
-  </a>
-
-- [JavaFX](https://openjfx.io/) - GUI Library
-  <a href="https://openjfx.io/" target="_blank" rel="noreferrer">
-    <img src="https://user-images.githubusercontent.com/25181517/117201387-0349c080-adee-11eb-83f3-04ff3afae14e.png" alt="JavaFX" width="40" height="40"/>
-  </a>
-
+- Java - Programming Language
+- JavaFX - GUI Library
 - CSS - Styling Language
-  <a href="https://developer.mozilla.org/en-US/docs/Web/CSS" target="_blank" rel="noreferrer">
-    <img src="https://user-images.githubusercontent.com/25181517/117202274-65e2ac80-adf0-11eb-823c-5d868b0e3e29.png" alt="CSS" width="40" height="40"/>
-  </a>
-
 - Scene Builder - GUI Design Tool
-  <a href="https://gluonhq.com/products/scene-builder/" target="_blank" rel="noreferrer">
-    <img src="https://user-images.githubusercontent.com/25181517/117202581-133cb080-adf1-11eb-8d2b-c8e15b7e8b67.png" alt="Scene Builder" width="40" height="40"/>
-  </a>
+
 
 ## Contribution
 The entire assignment PDF can be found in the repository. Since I worked on 90% of the app in less than a week, I might have missed some details, and some aspects may require further improvement. If you want to contribute and practice your OOP and Graphics Interface development skills:
