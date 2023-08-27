@@ -288,7 +288,7 @@ public class Planning implements Serializable {
                         Alert alert = new Alert(Alert.AlertType.ERROR);
                         alert.setTitle("Erreur");
                         alert.setHeaderText("Y a aucun Planning courant dans votre Application!, veuillez initialiser un planning");
-                        alert.setContentText("Veuillez choisissez une période pour votre planning");
+                        alert.setContentText("Veuillez choisissez une période pour votre planning, clicker sur le boutton Fixer pour faire cela");
                         alert.showAndWait();
                     }
                 });
@@ -325,7 +325,7 @@ public class Planning implements Serializable {
                         Alert alert = new Alert(Alert.AlertType.ERROR);
                         alert.setTitle("Erreur");
                         alert.setHeaderText("Y a aucun Planning courant dans votre Application!, veuillez initialiser un planning");
-                        alert.setContentText("Veuillez choisissez une période pour votre planning");
+                        alert.setContentText("Veuillez choisissez une période pour votre planning, clicker sur le boutton Fixer pour faire cela");
                         alert.showAndWait();
                     }
                 });
@@ -394,7 +394,7 @@ public class Planning implements Serializable {
                         Alert alert = new Alert(Alert.AlertType.ERROR);
                         alert.setTitle("Erreur");
                         alert.setHeaderText("Y a aucun Planning courant dans votre Application!, veuillez initialiser un planning");
-                        alert.setContentText("Veuillez choisissez une période pour votre planning");
+                        alert.setContentText("Veuillez choisissez une période pour votre planning, clicker sur le boutton Fixer pour faire cela");
                         alert.showAndWait();
                     }
                 });
@@ -430,7 +430,7 @@ public class Planning implements Serializable {
                         Alert alert = new Alert(Alert.AlertType.ERROR);
                         alert.setTitle("Erreur");
                         alert.setHeaderText("Y a aucun Planning courant dans votre Application!, veuillez initialiser un planning");
-                        alert.setContentText("Veuillez choisissez une période pour votre planning");
+                        alert.setContentText("Veuillez choisissez une période pour votre planning, clicker sur le boutton Fixer pour faire cela");
                         alert.showAndWait();
                     }
                 });
